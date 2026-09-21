@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IIT Madras BS/BSc Data Science CGPA Calculator - Foundation, Diploma & Degree</title>
+    <meta name="description" content="Free CGPA calculator for the IIT Madras BS in Data Science and Applications program. Track grades across Foundation (32 credits), Diploma in Programming (27 credits), Diploma in Data Science (27 credits), and BSc Degree (28 credits) levels, with Degree-level entry (CGPA >= 6.0, Projects CGPA >= 7.0) and PG Diploma / M.Tech upgrade (CGPA >= 8.00) eligibility checkpoints.">
+    <meta name="keywords" content="IIT Madras CGPA calculator, IITM BS Data Science, IIT Madras BSc CGPA, IITM diploma CGPA, IIT Madras grade calculator, Foundation level CGPA, Diploma level CGPA, BS Data Science and Applications, IITM degree level eligibility, IIT Madras PG diploma upgrade, IITM online BS degree">
+    <meta name="author" content="IIT Madras BS Data Science and Applications student community">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#667eea">
+
+    <!-- Open Graph / social preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="IIT Madras BS/BSc CGPA Calculator">
+    <meta property="og:title" content="IIT Madras BS/BSc Data Science CGPA Calculator">
+    <meta property="og:description" content="Calculate your CGPA across every level of the IIT Madras BS in Data Science and Applications program - Foundation, Diploma (Programming & Data Science), and BSc/BS Degree - with built-in eligibility checkpoints for progressing to Degree level and upgrading to a PG Diploma / M.Tech.">
+    <meta property="og:image" content="og-banner.png">
+    <meta property="og:image:width" content="1093">
+    <meta property="og:image:height" content="448">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="IIT Madras BS/BSc Data Science CGPA Calculator">
+    <meta name="twitter:description" content="Free tool to calculate CGPA across Foundation, Diploma, and Degree levels of the IIT Madras BS in Data Science and Applications program, with Degree-entry and PG upgrade eligibility checks.">
+    <meta name="twitter:image" content="og-banner.png">
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "IIT Madras BS/BSc Data Science CGPA Calculator",
+        "alternateName": "IITM BS Data Science CGPA Calculator",
+        "description": "A free browser-based CGPA calculator for students of the IIT Madras BS in Data Science and Applications program, covering Foundation, Diploma in Programming, Diploma in Data Science, and BSc/BS Degree levels, with built-in checkpoints for Degree-level entry eligibility (Rule 18.6) and PG Diploma / M.Tech upgrade eligibility.",
+        "applicationCategory": "EducationApplication",
+        "operatingSystem": "Any (web browser)",
+        "browserRequirements": "Requires JavaScript",
+        "isAccessibleForFree": true,
+        "about": {
+            "@type": "EducationalOccupationalProgram",
+            "name": "BS in Data Science and Applications",
+            "provider": {
+                "@type": "CollegeOrUniversity",
+                "name": "Indian Institute of Technology Madras",
+                "alternateName": "IIT Madras"
+            },
+            "educationalProgramMode": "online",
+            "occupationalCategory": "Data Science",
+            "description": "A flexible online undergraduate program from IIT Madras with multiple exit options: Foundation (32 credits), Diploma in Programming and Diploma in Data Science (27 credits each), BSc Degree (114 credits total), and full BS Degree (142 credits total)."
+        },
+        "featureList": [
+            "Foundation, Diploma, and Degree level CGPA calculation",
+            "Full Degree-level elective catalog with correct credits",
+            "Degree Level Entry Checkpoint (Diploma CGPA >= 6.0, Projects CGPA >= 7.0)",
+            "PG Diploma / M.Tech Upgrade Checkpoint (Overall CGPA >= 8.00)",
+            "Automatic saving of entered grades in the browser"
+        ]
+    }
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .cgpa-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .overall-cgpa-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            color: white;
+        }
+
+        .overall-label {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .overall-value {
+            font-size: 5em;
+            font-weight: 700;
+            margin: 15px 0;
+            line-height: 1;
+        }
+
+        .overall-percentage {
+            font-size: 1.8em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .level-cgpa-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .level-cgpa-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .level-cgpa-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+
+        .level-cgpa-info h3 {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .level-cgpa-credits {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .level-cgpa-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .formula-title {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 1.4em;
+            color: #333;
+            margin: 15px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .formula-note {
+            font-size: 0.9em;
+            color: #555;
+            line-height: 1.8;
+            margin-top: 15px;
+        }
+
+        .formula-note strong {
+            color: #764ba2;
+            font-weight: 600;
+        }
+
+        .level-tabs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            padding: 16px 20px;
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            color: #666;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .level-content {
+            display: none;
+        }
+
+        .level-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #667eea;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .course-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .course-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 22px;
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .course-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+            transform: translateX(5px);
+        }
+
+        .course-info h4 {
+            font-weight: 600;
+            font-size: 1.05em;
+            margin-bottom: 6px;
+            color: #333;
+        }
+
+        .course-code {
+            color: #666;
+            font-size: 0.9em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .course-credits {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .grade-select {
+            padding: 10px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            min-width: 140px;
+            font-weight: 500;
+        }
+
+        .grade-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .grade-select:hover {
+            border-color: #667eea;
+        }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .subsection-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin: 30px 0 8px;
+            color: #764ba2;
+        }
+
+        .subsection-note {
+            font-size: 0.88em;
+            color: #666;
+            margin-bottom: 18px;
+            line-height: 1.6;
+        }
+
+        .elective-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            padding: 22px;
+            border-radius: 12px;
+            display: grid;
+            grid-template-columns: 2.2fr auto auto auto;
+            align-items: center;
+            gap: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .elective-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+        }
+
+        .elective-select {
+            padding: 10px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            background: white;
+            font-weight: 500;
+            min-width: 220px;
+        }
+
+        .elective-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-remove {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 16px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-remove:hover {
+            background: #fecaca;
+        }
+
+        .btn-add-elective {
+            margin-top: 5px;
+            padding: 12px 28px;
+            border: 2px dashed #667eea;
+            border-radius: 12px;
+            background: white;
+            color: #667eea;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-elective:hover {
+            background: #f0f0ff;
+        }
+
+        .checkpoint-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        .checkpoint-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .checkpoint-header h2 {
+            font-size: 1.3em;
+            color: #333;
+        }
+
+        .rule-ref {
+            font-size: 0.6em;
+            color: #888;
+            font-weight: 400;
+        }
+
+        .checkpoint-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .checkpoint-stat {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 14px;
+            padding: 20px 25px;
+            border: 2px solid transparent;
+        }
+
+        .checkpoint-label {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .checkpoint-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .checkpoint-requirement {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .checkpoint-status {
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .status-pass {
+            color: #16a34a;
+        }
+
+        .status-fail {
+            color: #dc2626;
+        }
+
+        .status-warn {
+            color: #b45309;
+        }
+
+        .checkpoint-overall {
+            text-align: center;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.05em;
+            background: #f1f3f5;
+            color: #555;
+        }
+
+        .checkpoint-overall.status-pass {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .checkpoint-overall.status-fail {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .checkpoint-overall.status-warn {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        @media (max-width: 768px) {
+            .checkpoint-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .btn {
+            padding: 16px 35px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .level-cgpa-cards {
+                grid-template-columns: repeat(2, 1fr);
+                display: grid;
+            }
+        }
+
+        .grading-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            border-left: 5px solid #667eea;
+            margin-top: 30px;
+        }
+
+        .grading-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #333;
+            display: inline-block;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .grading-desc {
+            font-size: 0.92em;
+            color: #555;
+            margin: 18px 0 24px;
+            line-height: 1.6;
+        }
+
+        .grading-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .grading-table th {
+            background: #e4e9fb;
+            color: #333;
+            text-align: left;
+            padding: 14px 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        .grading-table td {
+            padding: 14px 20px;
+            font-size: 0.92em;
+            color: #333;
+        }
+
+        .grading-table tbody tr:nth-child(odd) {
+            background: #f8f9fa;
+        }
+
+        .grading-note {
+            margin-top: 20px;
+            font-size: 0.88em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .grading-note strong {
+            color: #333;
+        }
+
+        .disclaimer-box {
+            margin-top: 30px;
+            padding: 20px 25px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.85em;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .disclaimer-box strong {
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .grading-table {
+                font-size: 0.85em;
+            }
+
+            .grading-table th,
+            .grading-table td {
+                padding: 10px 12px;
+            }
+
+            .overall-value {
+                font-size: 4em;
+            }
+
+            .level-tabs {
+                grid-template-columns: 1fr;
+            }
+
+            .course-item {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .elective-item {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .elective-select {
+                min-width: 0;
+                width: 100%;
+            }
+
+            .level-cgpa-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>IIT Madras BSc CGPA Calculator</h1>
+            <p>Data Science and Applications</p>
+        </div>
+
+        <div class="main-grid">
+            <div class="cgpa-sidebar">
+                <div class="overall-cgpa-card">
+                    <div class="overall-label">Overall CGPA</div>
+                    <div class="overall-value" id="overallCGPA">0.00</div>
+                    <div class="overall-percentage" id="overallPercentage">0.0%</div>
+                </div>
+
+                <div class="level-cgpa-cards">
+                    <div class="level-cgpa-card">
+                        <div class="level-cgpa-info">
+                            <h3>Foundation</h3>
+                            <div class="level-cgpa-credits" id="foundationCredits">0/32 Credits</div>
+                        </div>
+                        <div class="level-cgpa-value" id="foundationCGPA">0.00</div>
+                    </div>
+
+                    <div class="level-cgpa-card">
+                        <div class="level-cgpa-info">
+                            <h3>Diploma - Programming</h3>
+                            <div class="level-cgpa-credits" id="diplomaProgCredits">0/27 Credits</div>
+                        </div>
+                        <div class="level-cgpa-value" id="diplomaProgCGPA">0.00</div>
+                    </div>
+
+                    <div class="level-cgpa-card">
+                        <div class="level-cgpa-info">
+                            <h3>Diploma - Data Science</h3>
+                            <div class="level-cgpa-credits" id="diplomaDSCredits">0/27 Credits</div>
+                        </div>
+                        <div class="level-cgpa-value" id="diplomaDSCGPA">0.00</div>
+                    </div>
+
+                    <div class="level-cgpa-card">
+                        <div class="level-cgpa-info">
+                            <h3>BSc Degree</h3>
+                            <div class="level-cgpa-credits" id="bscCredits">0/28 Credits</div>
+                        </div>
+                        <div class="level-cgpa-value" id="bscCGPA">0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="level-tabs">
+                    <button class="tab active" onclick="switchTab('foundation')">Foundation</button>
+                    <button class="tab" onclick="switchTab('diploma-prog')">Diploma - Prog</button>
+                    <button class="tab" onclick="switchTab('diploma-ds')">Diploma - DS</button>
+                    <button class="tab" onclick="switchTab('degree')">Degree</button>
+                </div>
+
+                <div id="foundation" class="level-content active">
+                    <div class="section-title">Foundation Level - 32 Credits</div>
+                    <div class="course-grid" id="foundation-courses"></div>
+                </div>
+
+                <div id="diploma-prog" class="level-content">
+                    <div class="section-title">Diploma in Programming - 27 Credits</div>
+                    <div class="course-grid" id="diploma-prog-courses"></div>
+                </div>
+
+                <div id="diploma-ds" class="level-content">
+                    <div class="section-title">Diploma in Data Science - 27 Credits</div>
+                    <div class="course-grid" id="diploma-ds-courses"></div>
+                </div>
+
+                <div id="degree" class="level-content">
+                    <div class="section-title">BSc Degree Level - Core & Electives</div>
+                    <div class="course-grid" id="degree-courses"></div>
+
+                    <div class="subsection-title">Electives - 8 Credits</div>
+                    <div class="subsection-note">
+                        Choose from the full Degree-level elective catalog (Data Science, CS &amp; Programming,
+                        Science &amp; Engineering, Humanities &amp; Management, Data Science &amp; CS, Management &amp;
+                        Data Science, Management &amp; CS). Includes the newly added 2-credit
+                        <strong>Comprehensive Exam</strong> electives (BSDA4002 / BSCS4009) - mix and match courses
+                        to reach 8 elective credits.
+                    </div>
+                    <div class="course-grid" id="degree-electives"></div>
+                    <button class="btn-add-elective" onclick="addElectiveRow()">+ Add Elective</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="checkpoint-card">
+            <div class="checkpoint-header">
+                <h2>🎓 Degree Level Entry Checkpoint</h2>
+            </div>
+
+            <div class="checkpoint-grid">
+                <div class="checkpoint-stat">
+                    <div class="checkpoint-label">Diploma Level CGPA</div>
+                    <div class="checkpoint-value" id="diplomaLevelCGPA">0.00</div>
+                    <div class="checkpoint-requirement">Required: &ge; 6.0</div>
+                    <div class="checkpoint-requirement">Courses graded: <span id="diplomaCoursesCounted">0/26</span> (Foundation + both Diplomas)</div>
+                    <div class="checkpoint-status" id="diplomaLevelStatus">—</div>
+                </div>
+                <div class="checkpoint-stat">
+                    <div class="checkpoint-label">Diploma Projects CGPA</div>
+                    <div class="checkpoint-value" id="diplomaProjectsCGPA">0.00</div>
+                    <div class="checkpoint-requirement">Required: &ge; 7.0 (<span id="projectsCounted">0</span>/4 standalone projects graded)</div>
+                    <div class="checkpoint-status" id="diplomaProjectsStatus">—</div>
+                </div>
+            </div>
+
+            <div class="checkpoint-overall" id="checkpointOverall">Enter diploma grades to check eligibility</div>
+        </div>
+
+        <div class="checkpoint-card">
+            <div class="checkpoint-header">
+                <h2>🎓 PG Diploma / M.Tech Upgrade Checkpoint</h2>
+            </div>
+
+            <div class="checkpoint-grid">
+                <div class="checkpoint-stat">
+                    <div class="checkpoint-label">Total Credits Completed</div>
+                    <div class="checkpoint-value" id="pgCreditsValue">0</div>
+                    <div class="checkpoint-requirement">Eligible window: 106 - 142 credits</div>
+                    <div class="checkpoint-status" id="pgCreditsStatus">—</div>
+                </div>
+                <div class="checkpoint-stat">
+                    <div class="checkpoint-label">Overall CGPA</div>
+                    <div class="checkpoint-value" id="pgCGPAValue">0.00</div>
+                    <div class="checkpoint-requirement">Required: &ge; 8.00</div>
+                    <div class="checkpoint-status" id="pgCGPAStatus">—</div>
+                </div>
+            </div>
+
+            <div class="checkpoint-overall" id="pgCheckpointOverall">Enter grades to check eligibility</div>
+
+            <div class="grading-note" style="margin-top: 20px;">
+                <strong>How the upgrade works:</strong> Once a student completes 142 credits and the BS degree,
+                they can study 20 more credits (3 core + 2 elective courses) to earn a <strong>PG Diploma</strong>,
+                or add a further 20-credit project to earn an <strong>M.Tech</strong> from IIT Madras.<br><br>
+                <strong>i.</strong> This upgrade option can be exercised any time after completing 106 credits,
+                until completing 142 credits.<br>
+                <strong>ii.</strong> The CGPA cutoff required in the BS program to apply for this upgrade is 8.00.<br>
+                <strong>iii.</strong> Recommended for working professionals who cannot leave their jobs for a
+                physical Masters program. Standalone students who joined after Std XII are strongly advised to
+                instead write GATE and join a college for their Masters rather than take this option.<br><br>
+                <em>Note: this calculator tracks Foundation + Diploma + BSc Degree levels (up to 114 credits).
+                The full 142-credit BS pathway includes additional specialization credits not modeled here, so
+                treat the credit total above as a partial reference.</em><br><br>
+                <a href="https://docs.google.com/document/d/e/2PACX-1vRrtiiHlurfHtFnJnDwtNZ0NHAci8PQ7pHsiX3V3SZKmbSmALDk4whCO5La6efs4MSmBLVTH2ZfGJNL/pub" target="_blank" rel="noopener noreferrer">Reference: IITM BS PG upgrade policy document</a>
+            </div>
+        </div>
+
+        <div class="formula-box">
+            <div class="formula-title">📐 CGPA Calculation Formula</div>
+            <div class="formula">CGPA = Σ(Cᵢ × GP) / ΣCᵢ</div>
+            <div class="formula-note">
+                <strong>Where:</strong><br>
+                • Cᵢ = Credit of the course<br>
+                • GP = Grade Point for that course<br>
+                • Σ = Sum over all registered courses successfully cleared (S to E only)<br>
+                • <strong>Note:</strong> Grades P, F, U, W, I are NOT included in CGPA calculation<br>
+                • <strong>Percentage = CGPA × 10</strong>
+            </div>
+        </div>
+
+        <div class="grading-card">
+            <h2 class="grading-title">Grading System</h2>
+            <p class="grading-desc">
+                According to the IIT Madras BS program, grades range from S (10 points) to E (4 points).
+                Grades U, P, and F are not included in CGPA calculation.
+            </p>
+            <table class="grading-table">
+                <thead>
+                    <tr>
+                        <th>Grade</th>
+                        <th>Points</th>
+                        <th>Cutoff</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>S</td><td>10</td><td>90</td></tr>
+                    <tr><td>A</td><td>9</td><td>80</td></tr>
+                    <tr><td>B</td><td>8</td><td>70</td></tr>
+                    <tr><td>C</td><td>7</td><td>60</td></tr>
+                    <tr><td>D</td><td>6</td><td>50</td></tr>
+                    <tr><td>E</td><td>4</td><td>40</td></tr>
+                    <tr><td>U</td><td>0</td><td>-</td></tr>
+                    <tr><td>P (Pass)</td><td>0</td><td>-</td></tr>
+                    <tr><td>F (Fail)</td><td>0</td><td>-</td></tr>
+                </tbody>
+            </table>
+            <p class="grading-note">
+                <strong>Note:</strong> Grades "P" and "F" indicate completion of a course but are not included in CGPA calculation.
+            </p>
+        </div>
+
+        <div class="disclaimer-box">
+            <strong>Disclaimer:</strong> This is an unofficial, community-built tool and is not affiliated with or
+            endorsed by IIT Madras. Course lists, credits, grading rules, and eligibility criteria may change
+            without notice - always verify against official IIT Madras BS Data Science and Applications
+            communications before relying on this calculator for academic decisions.
+        </div>
+    </div>
+
+    <script>
+        const courses = {
+            foundation: [
+                { name: "Mathematics for Data Science I", code: "BSMA1001", credits: 4 },
+                { name: "Statistics for Data Science I", code: "BSMA1002", credits: 4 },
+                { name: "Computational Thinking", code: "BSCS1001", credits: 4 },
+                { name: "English I", code: "BSHS1001", credits: 4 },
+                { name: "Mathematics for Data Science II", code: "BSMA1003", credits: 4 },
+                { name: "Statistics for Data Science II", code: "BSMA1004", credits: 4 },
+                { name: "Programming in Python", code: "BSCS1002", credits: 4 },
+                { name: "English II", code: "BSHS1002", credits: 4 }
+            ],
+            "diploma-prog": [
+                { name: "Database Management Systems", code: "BSCS2001", credits: 4 },
+                { name: "Programming, Data Structures and Algorithms using Python", code: "BSCS2002", credits: 4 },
+                { name: "Modern Application Development I", code: "BSCS2003", credits: 4 },
+                { name: "Modern Application Development I - Project", code: "BSCS2003P", credits: 2 },
+                { name: "Programming Concepts using Java", code: "BSCS2005", credits: 4 },
+                { name: "Modern Application Development II", code: "BSCS2006", credits: 4 },
+                { name: "Modern Application Development II - Project", code: "BSCS2006P", credits: 2 },
+                { name: "System Commands", code: "BSSE2001", credits: 3 }
+            ],
+            "diploma-ds": [
+                { name: "Machine Learning Foundations", code: "BSCS2004", credits: 4 },
+                { name: "Business Data Management", code: "BSMS2001", credits: 4 },
+                { name: "Machine Learning Techniques", code: "BSCS2007", credits: 4 },
+                { name: "Machine Learning Practice", code: "BSCS2008", credits: 4 },
+                { name: "Machine Learning Practice - Project", code: "BSCS2008P", credits: 2 },
+                { name: "Tools in Data Science", code: "BSSE2002", credits: 3 },
+                { name: "Business Data Management - Project (Option 1)", code: "BSMS2001P", credits: 2 },
+                { name: "Business Analytics (Option 1)", code: "BSMS2002", credits: 4 },
+                { name: "Introduction to Deep Learning and Generative AI (Option 2)", code: "BSDA2001", credits: 4 },
+                { name: "Deep Learning and Generative AI - Project (Option 2)", code: "BSDA2001P", credits: 2 }
+            ],
+            degree: [
+                { name: "Software Engineering (Core)", code: "BSCS3001", credits: 4 },
+                { name: "Software Testing (Core)", code: "BSCS3002", credits: 4 },
+                { name: "AI: Search Methods for Problem Solving (Core)", code: "BSCS3003", credits: 4 },
+                { name: "Deep Learning (Core)", code: "BSCS3004", credits: 4 },
+                { name: "Strategies for Professional Growth (Mandatory)", code: "BSGN3001", credits: 4 }
+            ]
+        };
+
+        // Degree-level elective catalog (from the DS Course Booklet)
+        const electiveCatalog = [
+            { group: "Data Science", options: [
+                { name: "Data Visualization Design", code: "BSCS4001", credits: 4 },
+                { name: "Speech Technology", code: "BSEE4001", credits: 4 },
+                { name: "Special Topics in Machine Learning (Reinforcement Learning)", code: "BSDA5007", credits: 4 },
+                { name: "Introduction to Natural Language Processing (i-NLP)", code: "BSDA5005", credits: 4 },
+                { name: "Deep Learning for Computer Vision", code: "BSDA5006", credits: 4 },
+                { name: "Large Language Models", code: "BSDA5004", credits: 4 },
+                { name: "Data Science and AI Lab", code: "BSDA4001", credits: 4 }
+            ]},
+            { group: "CS & Programming", options: [
+                { name: "Advanced Algorithms", code: "BSCS4021", credits: 4 },
+                { name: "Computer Systems Design", code: "BSCS3031", credits: 4 },
+                { name: "Operating Systems", code: "BSCS4022", credits: 4 },
+                { name: "Programming in C", code: "BSCS3005", credits: 4 },
+                { name: "Computer Networks", code: "BSCS4024", credits: 4 },
+                { name: "Theory of Computation", code: "BSCS3021", credits: 4 },
+                { name: "Compiler Design", code: "BSCS4032", credits: 4 },
+                { name: "App Dev Lab", code: "BSCS4010", credits: 4 }
+            ]},
+            { group: "Science & Engineering", options: [
+                { name: "Mathematical Thinking", code: "BSMA2001", credits: 4 },
+                { name: "Linear Statistical Models", code: "BSMA3012", credits: 4 },
+                { name: "Statistical Computing", code: "BSMA3014", credits: 4 },
+                { name: "Discrete Mathematics", code: "BSMA3001", credits: 4 }
+            ]},
+            { group: "Humanities & Management", options: [
+                { name: "Market Research", code: "BSMS3002", credits: 4 },
+                { name: "Managerial Economics", code: "BSMS3033", credits: 4 },
+                { name: "Corporate Finance", code: "BSMS3034", credits: 4 }
+            ]},
+            { group: "Data Science & CS", options: [
+                { name: "Algorithmic Thinking in Bioinformatics", code: "BSBT4001", credits: 4 },
+                { name: "Big Data and Biological Networks", code: "BSBT4002", credits: 4 },
+                { name: "Introduction to Big Data", code: "BSDA5001", credits: 4 },
+                { name: "Privacy and Security in Online Social Media", code: "BSCS4003", credits: 4 },
+                { name: "Deep Learning Practice", code: "BSDA5013", credits: 4 }
+            ]},
+            { group: "Management & Data Science", options: [
+                { name: "Industry 4.0", code: "BSMS4001", credits: 4 },
+                { name: "Financial Forensics", code: "BSMS4003", credits: 4 },
+                { name: "Game Theory and Strategy", code: "BSMS4023", credits: 4 }
+            ]},
+            { group: "Management & CS", options: [
+                { name: "Design Thinking for Data-Driven App Development", code: "BSMS4002", credits: 4 }
+            ]},
+            { group: "Comprehensive Exam Electives (New - 2 credits)", options: [
+                { name: "Comprehensive Exam - Data Science & AI", code: "BSDA4002", credits: 2 },
+                { name: "Comprehensive Exam - CS & IT", code: "BSCS4009", credits: 2 }
+            ]}
+        ];
+
+        const electiveByCode = {};
+        electiveCatalog.forEach(group => {
+            group.options.forEach(opt => { electiveByCode[opt.code] = opt; });
+        });
+
+        const gradePoints = {
+            "S": 10, "A": 9, "B": 8, "C": 7, "D": 6, "E": 4, "U": 0, "P": 0, "F": 0, "W": 0, "I": 0, "": 0
+        };
+
+        const excludeFromCGPA = ["P", "F", "U", "W", "I"];
+
+        // Standalone project courses counted toward the Rule 18.6 "Diploma Projects CGPA" checkpoint.
+        // BSMS2001P and BSDA2001P are the mutually-exclusive Option 1 / Option 2 DS-diploma projects.
+        const diplomaProjectCodes = ["BSCS2003P", "BSCS2006P", "BSCS2008P", "BSMS2001P", "BSDA2001P"];
+
+        function initializeCourses() {
+            Object.keys(courses).forEach(level => {
+                const container = document.getElementById(`${level}-courses`);
+                
+                courses[level].forEach((course, index) => {
+                    const courseDiv = document.createElement('div');
+                    courseDiv.className = 'course-item';
+                    courseDiv.innerHTML = `
+                        <div class="course-info">
+                            <h4>${course.name}</h4>
+                            <div class="course-code">${course.code}</div>
+                        </div>
+                        <div class="course-credits">${course.credits} Credits</div>
+                        <select class="grade-select" id="${level}-${index}" onchange="calculateCGPA()">
+                            <option value="">Select Grade</option>
+                            <option value="S">S (10)</option>
+                            <option value="A">A (9)</option>
+                            <option value="B">B (8)</option>
+                            <option value="C">C (7)</option>
+                            <option value="D">D (6)</option>
+                            <option value="E">E (4)</option>
+                            <option value="U">U (0)</option>
+                            <option value="P">P - Pass</option>
+                            <option value="F">F - Fail</option>
+                            <option value="W">W - Withdrawn</option>
+                            <option value="I">I - Incomplete</option>
+                        </select>
+                    `;
+                    container.appendChild(courseDiv);
+                });
+            });
+        }
+
+        let electiveRowCount = 0;
+
+        function buildElectiveOptionsHTML(selectedCode) {
+            let html = '<option value="">Select Elective</option>';
+            electiveCatalog.forEach(group => {
+                html += `<optgroup label="${group.group}">`;
+                group.options.forEach(opt => {
+                    const selected = opt.code === selectedCode ? 'selected' : '';
+                    html += `<option value="${opt.code}" ${selected}>${opt.name} (${opt.credits} cr)</option>`;
+                });
+                html += `</optgroup>`;
+            });
+            return html;
+        }
+
+        function addElectiveRow() {
+            const id = electiveRowCount++;
+            const container = document.getElementById('degree-electives');
+            const row = document.createElement('div');
+            row.className = 'elective-item';
+            row.id = `elective-row-${id}`;
+            row.innerHTML = `
+                <select class="elective-select" id="elective-course-${id}" onchange="updateElectiveCredits(${id}); calculateCGPA()">
+                    ${buildElectiveOptionsHTML('')}
+                </select>
+                <div class="course-credits" id="elective-credits-${id}">- Credits</div>
+                <select class="grade-select" id="elective-grade-${id}" onchange="calculateCGPA()">
+                    <option value="">Select Grade</option>
+                    <option value="S">S (10)</option>
+                    <option value="A">A (9)</option>
+                    <option value="B">B (8)</option>
+                    <option value="C">C (7)</option>
+                    <option value="D">D (6)</option>
+                    <option value="E">E (4)</option>
+                    <option value="U">U (0)</option>
+                    <option value="P">P - Pass</option>
+                    <option value="F">F - Fail</option>
+                    <option value="W">W - Withdrawn</option>
+                    <option value="I">I - Incomplete</option>
+                </select>
+                <button class="btn-remove" onclick="removeElectiveRow(${id})">Remove</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function updateElectiveCredits(id) {
+            const select = document.getElementById(`elective-course-${id}`);
+            const credEl = document.getElementById(`elective-credits-${id}`);
+            const course = electiveByCode[select.value];
+            credEl.textContent = course ? `${course.credits} Credits` : '- Credits';
+        }
+
+        function removeElectiveRow(id) {
+            const row = document.getElementById(`elective-row-${id}`);
+            if (row) row.remove();
+            calculateCGPA();
+        }
+
+        function getElectiveEntries() {
+            const entries = [];
+            document.querySelectorAll('.elective-item').forEach(row => {
+                const idMatch = row.id.match(/elective-row-(\d+)/);
+                if (!idMatch) return;
+                const id = idMatch[1];
+                const courseSelect = document.getElementById(`elective-course-${id}`);
+                const gradeSelect = document.getElementById(`elective-grade-${id}`);
+                const course = electiveByCode[courseSelect.value];
+                if (course) {
+                    entries.push({ credits: course.credits, grade: gradeSelect.value });
+                }
+            });
+            return entries;
+        }
+
+        function switchTab(levelId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.level-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(levelId).classList.add('active');
+        }
+
+        function calculateLevelCGPA(level) {
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+            let completedCredits = 0;
+
+            courses[level].forEach((course, index) => {
+                const select = document.getElementById(`${level}-${index}`);
+                const grade = select.value;
+                
+                if (grade && !excludeFromCGPA.includes(grade)) {
+                    completedCredits += course.credits;
+                    totalGradePoints += gradePoints[grade] * course.credits;
+                }
+                
+                if (grade) {
+                    totalCredits += course.credits;
+                }
+            });
+
+            if (level === 'degree') {
+                getElectiveEntries().forEach(({ credits, grade }) => {
+                    if (grade && !excludeFromCGPA.includes(grade)) {
+                        completedCredits += credits;
+                        totalGradePoints += gradePoints[grade] * credits;
+                    }
+                    if (grade) {
+                        totalCredits += credits;
+                    }
+                });
+            }
+
+            const cgpa = completedCredits > 0 ? (totalGradePoints / completedCredits).toFixed(2) : 0;
+            return { cgpa, completedCredits, totalCredits };
+        }
+
+        function calculateCombinedDiplomaCGPA() {
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+
+            ['foundation', 'diploma-prog', 'diploma-ds'].forEach(level => {
+                courses[level].forEach((course, index) => {
+                    const grade = document.getElementById(`${level}-${index}`).value;
+                    if (grade && !excludeFromCGPA.includes(grade)) {
+                        totalCredits += course.credits;
+                        totalGradePoints += gradePoints[grade] * course.credits;
+                    }
+                });
+            });
+
+            return totalCredits > 0 ? totalGradePoints / totalCredits : 0;
+        }
+
+        function calculateDiplomaProjectsCGPA() {
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+            let gradedCount = 0;
+
+            ['diploma-prog', 'diploma-ds'].forEach(level => {
+                courses[level].forEach((course, index) => {
+                    if (!diplomaProjectCodes.includes(course.code)) return;
+                    const grade = document.getElementById(`${level}-${index}`).value;
+                    if (!grade) return;
+                    gradedCount++;
+                    if (!excludeFromCGPA.includes(grade)) {
+                        totalCredits += course.credits;
+                        totalGradePoints += gradePoints[grade] * course.credits;
+                    }
+                });
+            });
+
+            return {
+                cgpa: totalCredits > 0 ? totalGradePoints / totalCredits : 0,
+                gradedCount
+            };
+        }
+
+        // Diploma-DS has two mutually-exclusive project options; only the fixed courses
+        // plus whichever one option the student is taking count toward "all courses graded".
+        const diplomaDsFixedCodes = ["BSCS2004", "BSMS2001", "BSCS2007", "BSCS2008", "BSCS2008P", "BSSE2002"];
+        const diplomaDsOption1Codes = ["BSMS2001P", "BSMS2002"];
+        const diplomaDsOption2Codes = ["BSDA2001", "BSDA2001P"];
+
+        function getGradeByCode(level, code) {
+            const index = courses[level].findIndex(c => c.code === code);
+            if (index === -1) return '';
+            const select = document.getElementById(`${level}-${index}`);
+            return select ? select.value : '';
+        }
+
+        function getDiplomaCompletionProgress() {
+            const foundationTotal = courses['foundation'].length;
+            const foundationGraded = courses['foundation'].filter(
+                (c, i) => document.getElementById(`foundation-${i}`).value
+            ).length;
+
+            const progTotal = courses['diploma-prog'].length;
+            const progGraded = courses['diploma-prog'].filter(
+                (c, i) => document.getElementById(`diploma-prog-${i}`).value
+            ).length;
+
+            const dsFixedGraded = diplomaDsFixedCodes.filter(code => getGradeByCode('diploma-ds', code)).length;
+            const option1Graded = diplomaDsOption1Codes.filter(code => getGradeByCode('diploma-ds', code)).length;
+            const option2Graded = diplomaDsOption2Codes.filter(code => getGradeByCode('diploma-ds', code)).length;
+            const chosenOptionGraded = Math.max(option1Graded, option2Graded);
+            const dsTotal = diplomaDsFixedCodes.length + 2; // 6 fixed + 2 for whichever option
+            const dsGraded = dsFixedGraded + chosenOptionGraded;
+
+            const total = foundationTotal + progTotal + dsTotal;
+            const graded = foundationGraded + progGraded + dsGraded;
+
+            return { graded, total, complete: graded === total };
+        }
+
+        function updateCheckpoint() {
+            const diplomaCGPA = calculateCombinedDiplomaCGPA();
+            const projectsData = calculateDiplomaProjectsCGPA();
+            const progress = getDiplomaCompletionProgress();
+
+            document.getElementById('diplomaLevelCGPA').textContent = diplomaCGPA.toFixed(2);
+            document.getElementById('diplomaProjectsCGPA').textContent = projectsData.cgpa.toFixed(2);
+            document.getElementById('projectsCounted').textContent = projectsData.gradedCount;
+            document.getElementById('diplomaCoursesCounted').textContent = `${progress.graded}/${progress.total}`;
+
+            const anyDiplomaGrade = progress.graded > 0;
+
+            const cgpaOK = diplomaCGPA >= 6.0;
+            const projectsOK = projectsData.gradedCount > 0 && projectsData.cgpa >= 7.0;
+
+            const diplomaStatusEl = document.getElementById('diplomaLevelStatus');
+            const projectsStatusEl = document.getElementById('diplomaProjectsStatus');
+            const overallEl = document.getElementById('checkpointOverall');
+
+            if (!anyDiplomaGrade) {
+                diplomaStatusEl.textContent = '—';
+                diplomaStatusEl.className = 'checkpoint-status';
+                projectsStatusEl.textContent = '—';
+                projectsStatusEl.className = 'checkpoint-status';
+                overallEl.textContent = 'Enter diploma grades to check eligibility';
+                overallEl.className = 'checkpoint-overall';
+            } else {
+                if (!cgpaOK) {
+                    diplomaStatusEl.textContent = '❌ Below requirement';
+                    diplomaStatusEl.className = 'checkpoint-status status-fail';
+                } else if (!progress.complete) {
+                    diplomaStatusEl.textContent = `⚠️ On track - ${progress.total - progress.graded} course(s) still ungraded`;
+                    diplomaStatusEl.className = 'checkpoint-status status-warn';
+                } else {
+                    diplomaStatusEl.textContent = '✅ Meets requirement';
+                    diplomaStatusEl.className = 'checkpoint-status status-pass';
+                }
+
+                projectsStatusEl.textContent = projectsOK ? '✅ Meets requirement' : '❌ Below requirement';
+                projectsStatusEl.className = 'checkpoint-status ' + (projectsOK ? 'status-pass' : 'status-fail');
+
+                if (cgpaOK && projectsOK && progress.complete) {
+                    overallEl.textContent = '✅ Eligible to progress to Degree Level';
+                    overallEl.className = 'checkpoint-overall status-pass';
+                } else if (cgpaOK && projectsOK && !progress.complete) {
+                    overallEl.textContent = '⚠️ On track, but complete all Foundation + both Diploma courses to confirm eligibility';
+                    overallEl.className = 'checkpoint-overall status-warn';
+                } else {
+                    overallEl.textContent = '❌ Not yet eligible to progress to Degree Level';
+                    overallEl.className = 'checkpoint-overall status-fail';
+                }
+            }
+        }
+
+        function updatePGCheckpoint(totalCredits, cgpa) {
+            document.getElementById('pgCreditsValue').textContent = totalCredits;
+            document.getElementById('pgCGPAValue').textContent = cgpa.toFixed(2);
+
+            const creditsStatusEl = document.getElementById('pgCreditsStatus');
+            const cgpaStatusEl = document.getElementById('pgCGPAStatus');
+            const overallEl = document.getElementById('pgCheckpointOverall');
+
+            if (totalCredits === 0) {
+                creditsStatusEl.textContent = '—';
+                creditsStatusEl.className = 'checkpoint-status';
+                cgpaStatusEl.textContent = '—';
+                cgpaStatusEl.className = 'checkpoint-status';
+                overallEl.textContent = 'Enter grades to check eligibility';
+                overallEl.className = 'checkpoint-overall';
+                return;
+            }
+
+            const creditsOK = totalCredits >= 106 && totalCredits <= 142;
+            const cgpaOK = cgpa >= 8.0;
+
+            if (totalCredits < 106) {
+                creditsStatusEl.textContent = '❌ Below the 106-credit window';
+            } else if (totalCredits > 142) {
+                creditsStatusEl.textContent = '❌ Past the 142-credit window';
+            } else {
+                creditsStatusEl.textContent = '✅ Within eligible window';
+            }
+            creditsStatusEl.className = 'checkpoint-status ' + (creditsOK ? 'status-pass' : 'status-fail');
+
+            cgpaStatusEl.textContent = cgpaOK ? '✅ Meets requirement' : '❌ Below requirement';
+            cgpaStatusEl.className = 'checkpoint-status ' + (cgpaOK ? 'status-pass' : 'status-fail');
+
+            if (creditsOK && cgpaOK) {
+                overallEl.textContent = '✅ Eligible to apply for the PG Diploma / M.Tech upgrade';
+                overallEl.className = 'checkpoint-overall status-pass';
+            } else {
+                overallEl.textContent = '❌ Not yet eligible for the upgrade option';
+                overallEl.className = 'checkpoint-overall status-fail';
+            }
+        }
+
+        function calculateCGPA() {
+            // Calculate individual level CGPAs
+            const foundationData = calculateLevelCGPA('foundation');
+            const diplomaProgData = calculateLevelCGPA('diploma-prog');
+            const diplomaDSData = calculateLevelCGPA('diploma-ds');
+            const degreeData = calculateLevelCGPA('degree');
+
+            // Update level CGPA displays
+            document.getElementById('foundationCGPA').textContent = foundationData.cgpa;
+            document.getElementById('foundationCredits').textContent = 
+                `${foundationData.completedCredits}/32 Credits`;
+
+            document.getElementById('diplomaProgCGPA').textContent = diplomaProgData.cgpa;
+            document.getElementById('diplomaProgCredits').textContent = 
+                `${diplomaProgData.completedCredits}/27 Credits`;
+
+            document.getElementById('diplomaDSCGPA').textContent = diplomaDSData.cgpa;
+            document.getElementById('diplomaDSCredits').textContent = 
+                `${diplomaDSData.completedCredits}/27 Credits`;
+
+            document.getElementById('bscCGPA').textContent = degreeData.cgpa;
+            document.getElementById('bscCredits').textContent = 
+                `${degreeData.completedCredits}/28 Credits`;
+
+            // Calculate overall CGPA
+            let overallCompletedCredits = 0;
+            let overallGradePoints = 0;
+
+            Object.keys(courses).forEach(level => {
+                courses[level].forEach((course, index) => {
+                    const select = document.getElementById(`${level}-${index}`);
+                    const grade = select.value;
+                    
+                    if (grade && !excludeFromCGPA.includes(grade)) {
+                        overallCompletedCredits += course.credits;
+                        overallGradePoints += gradePoints[grade] * course.credits;
+                    }
+                });
+            });
+
+            getElectiveEntries().forEach(({ credits, grade }) => {
+                if (grade && !excludeFromCGPA.includes(grade)) {
+                    overallCompletedCredits += credits;
+                    overallGradePoints += gradePoints[grade] * credits;
+                }
+            });
+
+            const overallCGPA = overallCompletedCredits > 0 ?
+                (overallGradePoints / overallCompletedCredits).toFixed(2) : 0;
+            const percentage = (overallCGPA * 10).toFixed(1);
+
+            document.getElementById('overallCGPA').textContent = overallCGPA;
+            document.getElementById('overallPercentage').textContent = percentage + '%';
+
+            updateCheckpoint();
+            updatePGCheckpoint(overallCompletedCredits, overallCompletedCredits > 0 ? overallGradePoints / overallCompletedCredits : 0);
+
+            saveState();
+        }
+
+        const STORAGE_KEY = 'iitm-cgpa-state';
+
+        function saveState() {
+            const state = { courses: {}, electives: [] };
+
+            document.querySelectorAll(
+                '#foundation-courses .grade-select, #diploma-prog-courses .grade-select, #diploma-ds-courses .grade-select, #degree-courses .grade-select'
+            ).forEach(select => {
+                state.courses[select.id] = select.value;
+            });
+
+            document.querySelectorAll('.elective-item').forEach(row => {
+                const idMatch = row.id.match(/elective-row-(\d+)/);
+                if (!idMatch) return;
+                const id = idMatch[1];
+                const courseSelect = document.getElementById(`elective-course-${id}`);
+                const gradeSelect = document.getElementById(`elective-grade-${id}`);
+                state.electives.push({ code: courseSelect.value, grade: gradeSelect.value });
+            });
+
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            } catch (e) {
+                // localStorage unavailable (e.g. private browsing) - ignore
+            }
+        }
+
+        function restoreState() {
+            let raw;
+            try {
+                raw = localStorage.getItem(STORAGE_KEY);
+            } catch (e) {
+                return false;
+            }
+            if (!raw) return false;
+
+            let state;
+            try {
+                state = JSON.parse(raw);
+            } catch (e) {
+                return false;
+            }
+
+            if (state.courses) {
+                Object.keys(state.courses).forEach(id => {
+                    const select = document.getElementById(id);
+                    if (select) select.value = state.courses[id];
+                });
+            }
+
+            document.getElementById('degree-electives').innerHTML = '';
+            electiveRowCount = 0;
+            if (Array.isArray(state.electives)) {
+                state.electives.forEach(entry => {
+                    addElectiveRow();
+                    const id = electiveRowCount - 1;
+                    const courseSelect = document.getElementById(`elective-course-${id}`);
+                    const gradeSelect = document.getElementById(`elective-grade-${id}`);
+                    if (courseSelect && entry.code) {
+                        courseSelect.value = entry.code;
+                        updateElectiveCredits(id);
+                    }
+                    if (gradeSelect && entry.grade) gradeSelect.value = entry.grade;
+                });
+            }
+
+            return true;
+        }
+
+        function resetAll() {
+            const confirmed = confirm('Are you sure you want to reset all grades?');
+            if (confirmed) {
+                // Reset all grade selections
+                document.querySelectorAll('.grade-select').forEach(select => {
+                    select.value = '';
+                });
+
+                // Reset electives back to two blank rows
+                document.getElementById('degree-electives').innerHTML = '';
+                electiveRowCount = 0;
+                addElectiveRow();
+                addElectiveRow();
+
+                // Reset all displays
+                document.getElementById('overallCGPA').textContent = '0.00';
+                document.getElementById('overallPercentage').textContent = '0.0%';
+                document.getElementById('foundationCGPA').textContent = '0.00';
+                document.getElementById('foundationCredits').textContent = '0/32 Credits';
+                document.getElementById('diplomaProgCGPA').textContent = '0.00';
+                document.getElementById('diplomaProgCredits').textContent = '0/27 Credits';
+                document.getElementById('diplomaDSCGPA').textContent = '0.00';
+                document.getElementById('diplomaDSCredits').textContent = '0/27 Credits';
+                document.getElementById('bscCGPA').textContent = '0.00';
+                document.getElementById('bscCredits').textContent = '0/28 Credits';
+
+                updateCheckpoint();
+                updatePGCheckpoint(0, 0);
+
+                try {
+                    localStorage.removeItem(STORAGE_KEY);
+                } catch (e) {
+                    // localStorage unavailable - ignore
+                }
+            }
+        }
+
+        initializeCourses();
+        const restored = restoreState();
+        if (!restored) {
+            addElectiveRow();
+            addElectiveRow();
+        }
+        calculateCGPA();
+    </script>
+</body>
+</html>
