@@ -1,0 +1,21 @@
+{
+    "name": "IIT Madras BS/BSc Data Science CGPA Calculator",
+    "short_name": "IITM CGPA",
+    "description": "Calculate your CGPA across Foundation, Diploma, and Degree levels of the IIT Madras BS in Data Science and Applications program.",
+    "icons": [
+        {
+            "src": "android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#667eea",
+    "background_color": "#1e3c72",
+    "display": "standalone",
+    "start_url": "/"
+}
