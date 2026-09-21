@@ -9,13 +9,15 @@
     <meta name="author" content="IIT Madras BS Data Science and Applications student community">
     <meta name="robots" content="index, follow">
     <meta name="theme-color" content="#667eea">
+    <link rel="canonical" href="https://iitm-bs-cgpa.vercel.app/">
 
     <!-- Open Graph / social preview -->
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://iitm-bs-cgpa.vercel.app/">
     <meta property="og:site_name" content="IIT Madras BS/BSc CGPA Calculator">
     <meta property="og:title" content="IIT Madras BS/BSc Data Science CGPA Calculator">
     <meta property="og:description" content="Calculate your CGPA across every level of the IIT Madras BS in Data Science and Applications program - Foundation, Diploma (Programming & Data Science), and BSc/BS Degree - with built-in eligibility checkpoints for progressing to Degree level and upgrading to a PG Diploma / M.Tech.">
-    <meta property="og:image" content="og-banner.png">
+    <meta property="og:image" content="https://iitm-bs-cgpa.vercel.app/og-banner.png">
     <meta property="og:image:width" content="1093">
     <meta property="og:image:height" content="448">
 
@@ -23,7 +25,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="IIT Madras BS/BSc Data Science CGPA Calculator">
     <meta name="twitter:description" content="Free tool to calculate CGPA across Foundation, Diploma, and Degree levels of the IIT Madras BS in Data Science and Applications program, with Degree-entry and PG upgrade eligibility checks.">
-    <meta name="twitter:image" content="og-banner.png">
+    <meta name="twitter:image" content="https://iitm-bs-cgpa.vercel.app/og-banner.png">
 
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%93%3C/text%3E%3C/svg%3E">
 
@@ -33,6 +35,7 @@
         "@type": "WebApplication",
         "name": "IIT Madras BS/BSc Data Science CGPA Calculator",
         "alternateName": "IITM BS Data Science CGPA Calculator",
+        "url": "https://iitm-bs-cgpa.vercel.app/",
         "description": "A free browser-based CGPA calculator for students of the IIT Madras BS in Data Science and Applications program, covering Foundation, Diploma in Programming, Diploma in Data Science, and BSc/BS Degree levels, with built-in checkpoints for Degree-level entry eligibility (Rule 18.6) and PG Diploma / M.Tech upgrade eligibility.",
         "applicationCategory": "EducationApplication",
         "operatingSystem": "Any (web browser)",
@@ -1043,9 +1046,15 @@
 
         const excludeFromCGPA = ["P", "F", "U", "W", "I"];
 
-        // Standalone project courses counted toward the Rule 18.6 "Diploma Projects CGPA" checkpoint.
-        // BSMS2001P and BSDA2001P are the mutually-exclusive Option 1 / Option 2 DS-diploma projects.
-        const diplomaProjectCodes = ["BSCS2003P", "BSCS2006P", "BSCS2008P", "BSMS2001P", "BSDA2001P"];
+        // Standalone project courses counted toward the Rule 18.6 "Diploma Projects CGPA" checkpoint:
+        // 3 fixed projects, plus whichever one of the mutually-exclusive Option 1 / Option 2
+        // DS-diploma projects (BSMS2001P or BSDA2001P) the student is taking.
+        const diplomaFixedProjects = [
+            { level: 'diploma-prog', code: 'BSCS2003P' },
+            { level: 'diploma-prog', code: 'BSCS2006P' },
+            { level: 'diploma-ds', code: 'BSCS2008P' }
+        ];
+        const diplomaProjectOptionCodes = ["BSMS2001P", "BSDA2001P"];
 
         function initializeCourses() {
             Object.keys(courses).forEach(level => {
@@ -1218,23 +1227,37 @@
             let totalCredits = 0;
             let totalGradePoints = 0;
             let gradedCount = 0;
+            const requiredCount = diplomaFixedProjects.length + 1; // 3 fixed + 1 chosen DS-diploma option
 
-            ['diploma-prog', 'diploma-ds'].forEach(level => {
-                courses[level].forEach((course, index) => {
-                    if (!diplomaProjectCodes.includes(course.code)) return;
-                    const grade = document.getElementById(`${level}-${index}`).value;
-                    if (!grade) return;
-                    gradedCount++;
-                    if (!excludeFromCGPA.includes(grade)) {
-                        totalCredits += course.credits;
-                        totalGradePoints += gradePoints[grade] * course.credits;
-                    }
-                });
+            diplomaFixedProjects.forEach(({ level, code }) => {
+                const index = courses[level].findIndex(c => c.code === code);
+                const grade = document.getElementById(`${level}-${index}`).value;
+                if (!grade) return;
+                gradedCount++;
+                if (!excludeFromCGPA.includes(grade)) {
+                    totalCredits += courses[level][index].credits;
+                    totalGradePoints += gradePoints[grade] * courses[level][index].credits;
+                }
             });
+
+            const optionGrades = diplomaProjectOptionCodes.map(code => {
+                const index = courses['diploma-ds'].findIndex(c => c.code === code);
+                return { code, index, grade: document.getElementById(`diploma-ds-${index}`).value };
+            });
+            const chosenOption = optionGrades.find(o => o.grade);
+            if (chosenOption) {
+                gradedCount++;
+                if (!excludeFromCGPA.includes(chosenOption.grade)) {
+                    const course = courses['diploma-ds'][chosenOption.index];
+                    totalCredits += course.credits;
+                    totalGradePoints += gradePoints[chosenOption.grade] * course.credits;
+                }
+            }
 
             return {
                 cgpa: totalCredits > 0 ? totalGradePoints / totalCredits : 0,
-                gradedCount
+                gradedCount,
+                requiredCount
             };
         }
 
@@ -1288,7 +1311,9 @@
             const anyDiplomaGrade = progress.graded > 0;
 
             const cgpaOK = diplomaCGPA >= 6.0;
-            const projectsOK = projectsData.gradedCount > 0 && projectsData.cgpa >= 7.0;
+            const projectsComplete = projectsData.gradedCount === projectsData.requiredCount;
+            const projectsCgpaOK = projectsData.cgpa >= 7.0;
+            const projectsOK = projectsComplete && projectsCgpaOK;
 
             const diplomaStatusEl = document.getElementById('diplomaLevelStatus');
             const projectsStatusEl = document.getElementById('diplomaProjectsStatus');
@@ -1313,8 +1338,16 @@
                     diplomaStatusEl.className = 'checkpoint-status status-pass';
                 }
 
-                projectsStatusEl.textContent = projectsOK ? '✅ Meets requirement' : '❌ Below requirement';
-                projectsStatusEl.className = 'checkpoint-status ' + (projectsOK ? 'status-pass' : 'status-fail');
+                if (!projectsCgpaOK) {
+                    projectsStatusEl.textContent = '❌ Below requirement';
+                    projectsStatusEl.className = 'checkpoint-status status-fail';
+                } else if (!projectsComplete) {
+                    projectsStatusEl.textContent = `⚠️ On track - ${projectsData.requiredCount - projectsData.gradedCount} project(s) still ungraded`;
+                    projectsStatusEl.className = 'checkpoint-status status-warn';
+                } else {
+                    projectsStatusEl.textContent = '✅ Meets requirement';
+                    projectsStatusEl.className = 'checkpoint-status status-pass';
+                }
 
                 if (cgpaOK && projectsOK && progress.complete) {
                     overallEl.textContent = '✅ Eligible to progress to Degree Level';
