@@ -309,7 +309,7 @@
             padding: 22px;
             border-radius: 12px;
             display: grid;
-            grid-template-columns: 1fr auto auto;
+            grid-template-columns: 1fr auto auto auto;
             align-items: center;
             gap: 20px;
             transition: all 0.3s ease;
@@ -320,6 +320,32 @@
             border-color: #667eea;
             box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
             transform: translateX(5px);
+        }
+
+        .course-item.flagged,
+        .elective-item.flagged {
+            border-color: #f59e0b;
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.2);
+        }
+
+        .flag-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 1.05em;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .flag-btn:hover {
+            border-color: #f59e0b;
+        }
+
+        .flag-btn.active {
+            background: #fef3c7;
+            border-color: #f59e0b;
         }
 
         .course-info h4 {
@@ -392,7 +418,7 @@
             padding: 22px;
             border-radius: 12px;
             display: grid;
-            grid-template-columns: 2.2fr auto auto auto;
+            grid-template-columns: 2.2fr auto auto auto auto;
             align-items: center;
             gap: 15px;
             border: 2px solid transparent;
@@ -1088,6 +1114,7 @@
                             <option value="W">W - Withdrawn</option>
                             <option value="I">I - Incomplete</option>
                         </select>
+                        <button type="button" class="flag-btn" id="flag-${level}-${index}" onclick="toggleReviewFlag(this)" aria-pressed="false" title="Mark for review">🚩</button>
                     `;
                     container.appendChild(courseDiv);
                 });
@@ -1134,6 +1161,7 @@
                     <option value="W">W - Withdrawn</option>
                     <option value="I">I - Incomplete</option>
                 </select>
+                <button type="button" class="flag-btn" id="elective-flag-${id}" onclick="toggleReviewFlag(this)" aria-pressed="false" title="Mark for review">🚩</button>
                 <button class="btn-remove" onclick="removeElectiveRow(${id})">Remove</button>
             `;
             container.appendChild(row);
@@ -1144,6 +1172,14 @@
             const credEl = document.getElementById(`elective-credits-${id}`);
             const course = electiveByCode[select.value];
             credEl.textContent = course ? `${course.credits} Credits` : '- Credits';
+        }
+
+        function toggleReviewFlag(btn) {
+            const active = btn.classList.toggle('active');
+            btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+            const item = btn.closest('.course-item, .elective-item');
+            if (item) item.classList.toggle('flagged', active);
+            saveState();
         }
 
         function removeElectiveRow(id) {
@@ -1472,12 +1508,18 @@
         const STORAGE_KEY = 'iitm-cgpa-state';
 
         function saveState() {
-            const state = { courses: {}, electives: [] };
+            const state = { courses: {}, electives: [], reviewFlags: [] };
 
             document.querySelectorAll(
                 '#foundation-courses .grade-select, #diploma-prog-courses .grade-select, #diploma-ds-courses .grade-select, #degree-courses .grade-select'
             ).forEach(select => {
                 state.courses[select.id] = select.value;
+            });
+
+            document.querySelectorAll(
+                '#foundation-courses .flag-btn.active, #diploma-prog-courses .flag-btn.active, #diploma-ds-courses .flag-btn.active, #degree-courses .flag-btn.active'
+            ).forEach(btn => {
+                state.reviewFlags.push(btn.id);
             });
 
             document.querySelectorAll('.elective-item').forEach(row => {
@@ -1486,7 +1528,12 @@
                 const id = idMatch[1];
                 const courseSelect = document.getElementById(`elective-course-${id}`);
                 const gradeSelect = document.getElementById(`elective-grade-${id}`);
-                state.electives.push({ code: courseSelect.value, grade: gradeSelect.value });
+                const flagBtn = document.getElementById(`elective-flag-${id}`);
+                state.electives.push({
+                    code: courseSelect.value,
+                    grade: gradeSelect.value,
+                    flagged: !!(flagBtn && flagBtn.classList.contains('active'))
+                });
             });
 
             try {
@@ -1519,6 +1566,17 @@
                 });
             }
 
+            if (Array.isArray(state.reviewFlags)) {
+                state.reviewFlags.forEach(id => {
+                    const btn = document.getElementById(id);
+                    if (!btn) return;
+                    btn.classList.add('active');
+                    btn.setAttribute('aria-pressed', 'true');
+                    const item = btn.closest('.course-item');
+                    if (item) item.classList.add('flagged');
+                });
+            }
+
             document.getElementById('degree-electives').innerHTML = '';
             electiveRowCount = 0;
             if (Array.isArray(state.electives)) {
@@ -1532,6 +1590,15 @@
                         updateElectiveCredits(id);
                     }
                     if (gradeSelect && entry.grade) gradeSelect.value = entry.grade;
+                    if (entry.flagged) {
+                        const flagBtn = document.getElementById(`elective-flag-${id}`);
+                        if (flagBtn) {
+                            flagBtn.classList.add('active');
+                            flagBtn.setAttribute('aria-pressed', 'true');
+                            const item = flagBtn.closest('.elective-item');
+                            if (item) item.classList.add('flagged');
+                        }
+                    }
                 });
             }
 
@@ -1544,6 +1611,15 @@
                 // Reset all grade selections
                 document.querySelectorAll('.grade-select').forEach(select => {
                     select.value = '';
+                });
+
+                // Reset review flags
+                document.querySelectorAll('.flag-btn.active').forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-pressed', 'false');
+                });
+                document.querySelectorAll('.course-item.flagged').forEach(item => {
+                    item.classList.remove('flagged');
                 });
 
                 // Reset electives back to two blank rows
