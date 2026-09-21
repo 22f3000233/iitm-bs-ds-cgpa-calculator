@@ -169,11 +169,21 @@
             justify-content: space-between;
             align-items: center;
             transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font: inherit;
         }
 
         .level-cgpa-card:hover {
             transform: translateX(5px);
             box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+
+        .level-cgpa-card:focus-visible {
+            outline: 3px solid #667eea;
+            outline-offset: 2px;
         }
 
         .level-cgpa-info h3 {
@@ -804,37 +814,37 @@
                 </div>
 
                 <div class="level-cgpa-cards">
-                    <div class="level-cgpa-card">
+                    <button type="button" class="level-cgpa-card" onclick="goToLevel('foundation')">
                         <div class="level-cgpa-info">
                             <h3>Foundation</h3>
                             <div class="level-cgpa-credits" id="foundationCredits">0/32 Credits</div>
                         </div>
                         <div class="level-cgpa-value" id="foundationCGPA">0.00</div>
-                    </div>
+                    </button>
 
-                    <div class="level-cgpa-card">
+                    <button type="button" class="level-cgpa-card" onclick="goToLevel('diploma-prog')">
                         <div class="level-cgpa-info">
                             <h3>Diploma - Programming</h3>
                             <div class="level-cgpa-credits" id="diplomaProgCredits">0/27 Credits</div>
                         </div>
                         <div class="level-cgpa-value" id="diplomaProgCGPA">0.00</div>
-                    </div>
+                    </button>
 
-                    <div class="level-cgpa-card">
+                    <button type="button" class="level-cgpa-card" onclick="goToLevel('diploma-ds')">
                         <div class="level-cgpa-info">
                             <h3>Diploma - Data Science</h3>
                             <div class="level-cgpa-credits" id="diplomaDSCredits">0/27 Credits</div>
                         </div>
                         <div class="level-cgpa-value" id="diplomaDSCGPA">0.00</div>
-                    </div>
+                    </button>
 
-                    <div class="level-cgpa-card">
+                    <button type="button" class="level-cgpa-card" onclick="goToLevel('degree')">
                         <div class="level-cgpa-info">
                             <h3>BSc Degree</h3>
                             <div class="level-cgpa-credits" id="bscCredits">0/28 Credits</div>
                         </div>
                         <div class="level-cgpa-value" id="bscCGPA">0.00</div>
-                    </div>
+                    </button>
                 </div>
             </div>
 
@@ -1247,6 +1257,14 @@
             } catch (e) {
                 // localStorage unavailable - ignore
             }
+        }
+
+        function goToLevel(levelId) {
+            const btn = document.querySelector(`.tab[onclick*="'${levelId}'"]`);
+            if (btn) switchTab(levelId, btn);
+
+            const content = document.getElementById(levelId);
+            if (content) content.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function restoreActiveTab() {
