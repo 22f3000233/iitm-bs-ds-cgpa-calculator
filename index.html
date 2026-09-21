@@ -704,6 +704,37 @@
             color: #333;
         }
 
+        .grading-note-accordion summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: #333;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            list-style: none;
+            user-select: none;
+        }
+
+        .grading-note-accordion summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .grading-note-accordion summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 0.75em;
+            transition: transform 0.2s ease;
+        }
+
+        .grading-note-accordion[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .grading-note-accordion .grading-note {
+            padding: 15px 15px 5px;
+        }
+
         .disclaimer-box {
             margin-top: 30px;
             padding: 20px 25px;
@@ -904,21 +935,24 @@
 
             <div class="checkpoint-overall" id="pgCheckpointOverall">Enter grades to check eligibility</div>
 
-            <div class="grading-note" style="margin-top: 20px;">
-                <strong>How the upgrade works:</strong> Once a student completes 142 credits and the BS degree,
-                they can study 20 more credits (3 core + 2 elective courses) to earn a <strong>PG Diploma</strong>,
-                or add a further 20-credit project to earn an <strong>M.Tech</strong> from IIT Madras.<br><br>
-                <strong>i.</strong> This upgrade option can be exercised any time after completing 106 credits,
-                until completing 142 credits.<br>
-                <strong>ii.</strong> The CGPA cutoff required in the BS program to apply for this upgrade is 8.00.<br>
-                <strong>iii.</strong> Recommended for working professionals who cannot leave their jobs for a
-                physical Masters program. Standalone students who joined after Std XII are strongly advised to
-                instead write GATE and join a college for their Masters rather than take this option.<br><br>
-                <em>Note: this calculator tracks Foundation + Diploma + BSc Degree levels (up to 114 credits).
-                The full 142-credit BS pathway includes additional specialization credits not modeled here, so
-                treat the credit total above as a partial reference.</em><br><br>
-                <a href="https://docs.google.com/document/d/e/2PACX-1vRrtiiHlurfHtFnJnDwtNZ0NHAci8PQ7pHsiX3V3SZKmbSmALDk4whCO5La6efs4MSmBLVTH2ZfGJNL/pub" target="_blank" rel="noopener noreferrer">Reference: IITM BS PG upgrade policy document</a>
-            </div>
+            <details class="grading-note-accordion" style="margin-top: 20px;">
+                <summary>How the upgrade works</summary>
+                <div class="grading-note">
+                    Once a student completes 142 credits and the BS degree,
+                    they can study 20 more credits (3 core + 2 elective courses) to earn a <strong>PG Diploma</strong>,
+                    or add a further 20-credit project to earn an <strong>M.Tech</strong> from IIT Madras.<br><br>
+                    <strong>i.</strong> This upgrade option can be exercised any time after completing 106 credits,
+                    until completing 142 credits.<br>
+                    <strong>ii.</strong> The CGPA cutoff required in the BS program to apply for this upgrade is 8.00.<br>
+                    <strong>iii.</strong> Recommended for working professionals who cannot leave their jobs for a
+                    physical Masters program. Standalone students who joined after Std XII are strongly advised to
+                    instead write GATE and join a college for their Masters rather than take this option.<br><br>
+                    <em>Note: this calculator tracks Foundation + Diploma + BSc Degree levels (up to 114 credits).
+                    The full 142-credit BS pathway includes additional specialization credits not modeled here, so
+                    treat the credit total above as a partial reference.</em><br><br>
+                    <a href="https://docs.google.com/document/d/e/2PACX-1vRrtiiHlurfHtFnJnDwtNZ0NHAci8PQ7pHsiX3V3SZKmbSmALDk4whCO5La6efs4MSmBLVTH2ZfGJNL/pub" target="_blank" rel="noopener noreferrer">Reference: IITM BS PG upgrade policy document</a>
+                </div>
+            </details>
         </div>
 
         <div class="formula-box">
