@@ -796,6 +796,191 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .tour-fab {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 22px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.45);
+            transition: all 0.3s ease;
+        }
+
+        .tour-fab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.55);
+        }
+
+        .tour-fab:focus-visible {
+            outline: 3px solid white;
+            outline-offset: 2px;
+        }
+
+        .tour-fab-icon {
+            font-size: 1.1em;
+        }
+
+        .tour-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            z-index: 9997;
+        }
+
+        .tour-highlight {
+            position: fixed;
+            border-radius: 14px;
+            box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.55);
+            z-index: 9997;
+            pointer-events: none;
+            transition: top 0.35s ease, left 0.35s ease, width 0.35s ease, height 0.35s ease;
+        }
+
+        .tour-fab[hidden],
+        .tour-backdrop[hidden],
+        .tour-highlight[hidden],
+        .tour-tooltip[hidden] {
+            display: none;
+        }
+
+        .tour-tooltip {
+            position: fixed;
+            z-index: 9999;
+            width: 320px;
+            max-width: calc(100vw - 32px);
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            transition: top 0.35s ease, left 0.35s ease;
+        }
+
+        .tour-tooltip-step {
+            font-size: 0.75em;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #764ba2;
+            margin-bottom: 8px;
+        }
+
+        .tour-tooltip-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .tour-tooltip-body {
+            font-size: 0.92em;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .tour-dots {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+
+        .tour-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.2s ease;
+        }
+
+        .tour-dot.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        .tour-tooltip-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tour-tooltip-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tour-btn {
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-size: 0.88em;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .tour-btn-text {
+            background: transparent;
+            color: #888;
+            padding: 10px 6px;
+        }
+
+        .tour-btn-text:hover {
+            color: #555;
+        }
+
+        .tour-btn-secondary {
+            background: #f1f3f5;
+            color: #555;
+        }
+
+        .tour-btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .tour-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.35);
+        }
+
+        .tour-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.45);
+        }
+
+        .tour-btn:disabled {
+            opacity: 0.4;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .tour-fab-label {
+                display: none;
+            }
+
+            .tour-fab {
+                padding: 14px;
+                border-radius: 50%;
+            }
+
+            .tour-tooltip {
+                width: calc(100vw - 32px);
+                left: 16px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -889,7 +1074,7 @@
             </div>
         </div>
 
-        <div class="checkpoint-card">
+        <div class="checkpoint-card" id="degreeEntryCheckpoint">
             <div class="checkpoint-header">
                 <h2>🎓 Degree Level Entry Checkpoint</h2>
             </div>
@@ -913,7 +1098,7 @@
             <div class="checkpoint-overall" id="checkpointOverall">Enter diploma grades to check eligibility</div>
         </div>
 
-        <div class="checkpoint-card">
+        <div class="checkpoint-card" id="pgUpgradeCheckpoint">
             <div class="checkpoint-header">
                 <h2>🎓 PG Diploma / M.Tech Upgrade Checkpoint</h2>
             </div>
@@ -1006,6 +1191,26 @@
             endorsed by IIT Madras. Course lists, credits, grading rules, and eligibility criteria may change
             without notice - always verify against official IIT Madras BS Data Science and Applications
             communications before relying on this calculator for academic decisions.
+        </div>
+    </div>
+
+    <button type="button" id="tourFab" class="tour-fab" onclick="startTour()" aria-label="Take a tour of the calculator">
+        <span class="tour-fab-icon" aria-hidden="true">🧭</span><span class="tour-fab-label">Take a Tour</span>
+    </button>
+
+    <div id="tourBackdrop" class="tour-backdrop" hidden></div>
+    <div id="tourHighlight" class="tour-highlight" hidden></div>
+    <div id="tourTooltip" class="tour-tooltip" role="dialog" aria-live="polite" aria-labelledby="tourTooltipTitle" hidden>
+        <div class="tour-tooltip-step" id="tourStepCounter"></div>
+        <div class="tour-tooltip-title" id="tourTooltipTitle"></div>
+        <div class="tour-tooltip-body" id="tourTooltipBody"></div>
+        <div class="tour-dots" id="tourDots"></div>
+        <div class="tour-tooltip-footer">
+            <button type="button" class="tour-btn tour-btn-text" id="tourSkipBtn" onclick="skipTour()">Skip</button>
+            <div class="tour-tooltip-nav">
+                <button type="button" class="tour-btn tour-btn-secondary" id="tourBackBtn" onclick="tourBack()">Back</button>
+                <button type="button" class="tour-btn tour-btn-primary" id="tourNextBtn" onclick="tourNext()">Next</button>
+            </div>
         </div>
     </div>
 
@@ -1726,6 +1931,208 @@
             }
         }
 
+        const TOUR_STORAGE_KEY = 'iitm-cgpa-tour-completed';
+
+        const tourSteps = [
+            {
+                title: "Welcome! 👋",
+                body: "Here's a quick tour of the IIT Madras BS/BSc CGPA Calculator. You can skip anytime."
+            },
+            {
+                target: '.overall-cgpa-card',
+                title: "Your Overall CGPA",
+                body: "This updates live the moment you start entering grades below, combining every level and elective you've graded."
+            },
+            {
+                target: '.level-cgpa-cards',
+                title: "Jump to a Level",
+                body: "Each card shows that level's live CGPA and credits completed. Click one to jump straight to it."
+            },
+            {
+                target: '.level-tabs',
+                title: "Switch Between Levels",
+                body: "Foundation, Diploma (Programming &amp; Data Science), and Degree each have their own tab of courses.",
+                before: () => ensureTabActive('foundation')
+            },
+            {
+                target: '#foundation-0',
+                title: "Select a Grade",
+                body: "Pick the grade you got - or expect to get - for each course. Everything recalculates instantly, no need to save.",
+                before: () => ensureTabActive('foundation')
+            },
+            {
+                target: '#flag-foundation-0',
+                title: "Flag for Review",
+                body: "Not sure about a grade yet, or want to double-check it later? Flag the course and it'll stand out visually.",
+                before: () => ensureTabActive('foundation')
+            },
+            {
+                target: '.btn-add-elective',
+                title: "Add Degree Electives",
+                body: "On the Degree tab, add as many elective rows as you need and pick from the full elective catalog.",
+                before: () => ensureTabActive('degree')
+            },
+            {
+                target: '#degreeEntryCheckpoint',
+                title: "Degree Level Entry Checkpoint",
+                body: "Tracks whether you meet the CGPA and project requirements to progress from Diploma to Degree level."
+            },
+            {
+                target: '#pgUpgradeCheckpoint',
+                title: "PG Diploma / M.Tech Upgrade",
+                body: "See at a glance whether you're eligible to apply for the PG Diploma or M.Tech upgrade option."
+            },
+            {
+                title: "You're all set! 🎉",
+                body: "Everything you enter is saved automatically in your browser - nothing is uploaded anywhere. Look for the compass button anytime you want to replay this tour."
+            }
+        ];
+
+        let tourIndex = 0;
+        let tourActive = false;
+        let tourResizeHandler = null;
+
+        function ensureTabActive(levelId) {
+            const btn = document.querySelector(`.tab[onclick*="'${levelId}'"]`);
+            if (btn && !btn.classList.contains('active')) {
+                switchTab(levelId, btn);
+            }
+        }
+
+        function handleTourKeydown(e) {
+            if (!tourActive) return;
+            if (e.key === 'Escape') skipTour();
+            else if (e.key === 'ArrowRight' || e.key === 'Enter') tourNext();
+            else if (e.key === 'ArrowLeft') tourBack();
+        }
+
+        function positionTooltip(rect) {
+            const tooltip = document.getElementById('tourTooltip');
+            const margin = 16;
+            const ttRect = tooltip.getBoundingClientRect();
+            let top, left;
+
+            if (!rect) {
+                top = Math.max(margin, (window.innerHeight - ttRect.height) / 2);
+                left = Math.max(margin, (window.innerWidth - ttRect.width) / 2);
+            } else {
+                if (rect.bottom + margin + ttRect.height < window.innerHeight) {
+                    top = rect.bottom + margin;
+                } else if (rect.top - margin - ttRect.height > margin) {
+                    top = rect.top - margin - ttRect.height;
+                } else {
+                    top = Math.max(margin, (window.innerHeight - ttRect.height) / 2);
+                }
+                left = rect.left + rect.width / 2 - ttRect.width / 2;
+                left = Math.min(Math.max(margin, left), window.innerWidth - ttRect.width - margin);
+            }
+            tooltip.style.top = `${top}px`;
+            tooltip.style.left = `${left}px`;
+        }
+
+        function renderTourStep(skipScroll) {
+            const step = tourSteps[tourIndex];
+            if (step.before) step.before();
+
+            const highlight = document.getElementById('tourHighlight');
+
+            document.getElementById('tourStepCounter').textContent = `Step ${tourIndex + 1} of ${tourSteps.length}`;
+            document.getElementById('tourTooltipTitle').textContent = step.title;
+            document.getElementById('tourTooltipBody').innerHTML = step.body;
+
+            document.getElementById('tourDots').innerHTML = tourSteps.map((_, i) =>
+                `<span class="tour-dot${i === tourIndex ? ' active' : ''}"></span>`
+            ).join('');
+
+            document.getElementById('tourBackBtn').disabled = tourIndex === 0;
+            document.getElementById('tourNextBtn').textContent = tourIndex === tourSteps.length - 1 ? 'Finish' : 'Next';
+
+            const targetEl = step.target ? document.querySelector(step.target) : null;
+
+            const place = () => {
+                if (targetEl) {
+                    const rect = targetEl.getBoundingClientRect();
+                    const pad = 8;
+                    highlight.hidden = false;
+                    highlight.style.top = `${rect.top - pad}px`;
+                    highlight.style.left = `${rect.left - pad}px`;
+                    highlight.style.width = `${rect.width + pad * 2}px`;
+                    highlight.style.height = `${rect.height + pad * 2}px`;
+                    positionTooltip(rect);
+                } else {
+                    highlight.hidden = true;
+                    positionTooltip(null);
+                }
+            };
+
+            if (targetEl && !skipScroll) {
+                targetEl.scrollIntoView({ behavior: 'auto', block: 'center' });
+                requestAnimationFrame(() => requestAnimationFrame(place));
+            } else {
+                place();
+            }
+        }
+
+        function tourNext() {
+            if (tourIndex === tourSteps.length - 1) {
+                endTour();
+            } else {
+                tourIndex++;
+                renderTourStep();
+            }
+        }
+
+        function tourBack() {
+            if (tourIndex === 0) return;
+            tourIndex--;
+            renderTourStep();
+        }
+
+        function skipTour() {
+            endTour();
+        }
+
+        function startTour() {
+            tourActive = true;
+            tourIndex = 0;
+            document.getElementById('tourFab').hidden = true;
+            document.getElementById('tourBackdrop').hidden = false;
+            document.getElementById('tourTooltip').hidden = false;
+            renderTourStep();
+
+            tourResizeHandler = () => renderTourStep(true);
+            window.addEventListener('resize', tourResizeHandler);
+            document.addEventListener('keydown', handleTourKeydown);
+        }
+
+        function endTour() {
+            tourActive = false;
+            document.getElementById('tourFab').hidden = false;
+            document.getElementById('tourBackdrop').hidden = true;
+            document.getElementById('tourHighlight').hidden = true;
+            document.getElementById('tourTooltip').hidden = true;
+            if (tourResizeHandler) window.removeEventListener('resize', tourResizeHandler);
+            document.removeEventListener('keydown', handleTourKeydown);
+
+            try {
+                localStorage.setItem(TOUR_STORAGE_KEY, '1');
+            } catch (e) {
+                // localStorage unavailable - ignore
+            }
+        }
+
+        function initTour(isNewUser) {
+            let seen = false;
+            try {
+                seen = !!localStorage.getItem(TOUR_STORAGE_KEY);
+            } catch (e) {
+                seen = false;
+            }
+            if (!seen && isNewUser) {
+                setTimeout(startTour, 700);
+            }
+        }
+
         initializeCourses();
         const restored = restoreState();
         if (!restored) {
@@ -1734,6 +2141,7 @@
         }
         restoreActiveTab();
         calculateCGPA();
+        initTour(!restored);
     </script>
 </body>
 </html>
