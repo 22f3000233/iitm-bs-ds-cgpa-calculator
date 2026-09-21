@@ -412,6 +412,34 @@
             gap: 15px;
         }
 
+        .cgpa-sidebar .actions {
+            margin-top: 0;
+        }
+
+        .btn-tour {
+            width: 100%;
+            background: #ede9fe;
+            color: #764ba2;
+            border: 2px solid transparent;
+        }
+
+        .btn-tour:hover {
+            background: #ddd6fe;
+            border-color: #764ba2;
+        }
+
+        .btn-reset {
+            width: 100%;
+            background: #fee2e2;
+            color: #dc2626;
+            border: 2px solid transparent;
+        }
+
+        .btn-reset:hover {
+            background: #fecaca;
+            border-color: #dc2626;
+        }
+
         .subsection-title {
             font-size: 1.1em;
             font-weight: 700;
@@ -797,40 +825,6 @@
             }
         }
 
-        .tour-fab {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 22px;
-            border: none;
-            border-radius: 50px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-size: 0.95em;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.45);
-            transition: all 0.3s ease;
-        }
-
-        .tour-fab:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.55);
-        }
-
-        .tour-fab:focus-visible {
-            outline: 3px solid white;
-            outline-offset: 2px;
-        }
-
-        .tour-fab-icon {
-            font-size: 1.1em;
-        }
-
         .tour-backdrop {
             position: fixed;
             inset: 0;
@@ -847,7 +841,6 @@
             transition: top 0.35s ease, left 0.35s ease, width 0.35s ease, height 0.35s ease;
         }
 
-        .tour-fab[hidden],
         .tour-backdrop[hidden],
         .tour-highlight[hidden],
         .tour-tooltip[hidden] {
@@ -967,15 +960,6 @@
         }
 
         @media (max-width: 600px) {
-            .tour-fab-label {
-                display: none;
-            }
-
-            .tour-fab {
-                padding: 14px;
-                border-radius: 50%;
-            }
-
             .tour-tooltip {
                 width: calc(100vw - 32px);
                 left: 16px !important;
@@ -1030,6 +1014,14 @@
                         </div>
                         <div class="level-cgpa-value" id="bscCGPA">0.00</div>
                     </button>
+                </div>
+
+                <div class="actions">
+                    <button type="button" id="tourFab" class="btn btn-tour" onclick="startTour()" aria-label="Take a tour of the calculator">🧭 Take a Tour</button>
+                </div>
+
+                <div class="actions">
+                    <button type="button" class="btn btn-reset" onclick="resetAll()">Reset All Grades</button>
                 </div>
             </div>
 
@@ -1193,10 +1185,6 @@
             communications before relying on this calculator for academic decisions.
         </div>
     </div>
-
-    <button type="button" id="tourFab" class="tour-fab" onclick="startTour()" aria-label="Take a tour of the calculator">
-        <span class="tour-fab-icon" aria-hidden="true">🧭</span><span class="tour-fab-label">Take a Tour</span>
-    </button>
 
     <div id="tourBackdrop" class="tour-backdrop" hidden></div>
     <div id="tourHighlight" class="tour-highlight" hidden></div>
