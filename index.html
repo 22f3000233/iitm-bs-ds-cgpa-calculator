@@ -850,10 +850,10 @@
 
             <div class="content-area">
                 <div class="level-tabs">
-                    <button class="tab active" onclick="switchTab('foundation')">Foundation</button>
-                    <button class="tab" onclick="switchTab('diploma-prog')">Diploma - Prog</button>
-                    <button class="tab" onclick="switchTab('diploma-ds')">Diploma - DS</button>
-                    <button class="tab" onclick="switchTab('degree')">Degree</button>
+                    <button class="tab active" onclick="switchTab('foundation', this)">Foundation</button>
+                    <button class="tab" onclick="switchTab('diploma-prog', this)">Diploma - Prog</button>
+                    <button class="tab" onclick="switchTab('diploma-ds', this)">Diploma - DS</button>
+                    <button class="tab" onclick="switchTab('degree', this)">Degree</button>
                 </div>
 
                 <div id="foundation" class="level-content active">
@@ -1241,12 +1241,40 @@
             return entries;
         }
 
-        function switchTab(levelId) {
+        const TAB_STORAGE_KEY = 'iitm-cgpa-active-tab';
+
+        function switchTab(levelId, btn) {
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.level-content').forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
+
+            btn.classList.add('active');
             document.getElementById(levelId).classList.add('active');
+
+            try {
+                localStorage.setItem(TAB_STORAGE_KEY, levelId);
+            } catch (e) {
+                // localStorage unavailable - ignore
+            }
+        }
+
+        function restoreActiveTab() {
+            let levelId;
+            try {
+                levelId = localStorage.getItem(TAB_STORAGE_KEY);
+            } catch (e) {
+                return;
+            }
+            if (!levelId) return;
+
+            const content = document.getElementById(levelId);
+            const btn = document.querySelector(`.tab[onclick*="'${levelId}'"]`);
+            if (!content || !btn) return;
+
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.level-content').forEach(c => c.classList.remove('active'));
+
+            btn.classList.add('active');
+            content.classList.add('active');
         }
 
         function calculateLevelCGPA(level) {
@@ -1694,6 +1722,7 @@
             addElectiveRow();
             addElectiveRow();
         }
+        restoreActiveTab();
         calculateCGPA();
     </script>
 </body>
