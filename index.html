@@ -374,6 +374,10 @@
             border-color: #f59e0b;
         }
 
+        .course-avatar {
+            display: none;
+        }
+
         .course-info h4 {
             font-weight: 600;
             font-size: 1.05em;
@@ -1213,14 +1217,17 @@
 
             .course-item, .elective-item {
                 position: relative;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
+                display: grid;
+                grid-template-columns: 34px 1fr auto auto;
+                grid-template-rows: auto auto auto;
+                column-gap: 8px;
+                row-gap: 3px;
+                align-items: center;
                 background: transparent;
                 border: none;
                 border-bottom: 1px solid rgba(102, 126, 234, 0.14);
                 border-radius: 0;
-                padding: 16px 40px 16px 2px;
+                padding: 10px 4px 10px 2px;
                 box-shadow: none;
                 transform: none !important;
             }
@@ -1239,36 +1246,114 @@
                 border-radius: 12px;
                 background: rgba(245, 158, 11, 0.1);
                 box-shadow: none;
-                margin: 4px 0;
-                padding-left: 12px;
+                margin: 3px 0;
+                padding-left: 10px;
             }
 
-            .course-info { order: 1; }
-            .elective-select { order: 1; width: 100%; }
-            .course-credits { order: 2; align-self: flex-start; }
-            .grade-select { order: 3; }
-            .btn-remove { order: 4; width: 100%; text-align: center; border-radius: 12px; padding: 12px; margin-top: 2px; }
+            .course-avatar {
+                display: flex;
+                grid-column: 1;
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.66em;
+                font-weight: 700;
+                color: #fff;
+                flex-shrink: 0;
+            }
+
+            .course-item .course-avatar { grid-row: 1 / span 3; }
+            .elective-item .course-avatar { grid-row: 1 / span 2; }
+
+            /* Unwrap course-info so the name and code become independent grid items */
+            .course-info {
+                display: contents;
+            }
+
+            .course-info h4 {
+                grid-column: 2 / -1;
+                grid-row: 1;
+                min-width: 0;
+                font-size: 0.9em;
+                margin-bottom: 1px;
+                white-space: normal;
+                overflow-wrap: break-word;
+            }
+
+            .course-code {
+                grid-column: 2;
+                grid-row: 2;
+                align-self: start;
+            }
+
+            .elective-select {
+                grid-column: 2 / -1;
+                grid-row: 1;
+                width: 100%;
+            }
+
+            .course-credits {
+                grid-column: 2;
+                justify-self: start;
+                align-self: start;
+                padding: 2px 10px;
+                font-size: 0.66em;
+            }
+
+            .course-item .course-credits { grid-row: 3; }
+            .elective-item .course-credits { grid-row: 2; align-self: center; }
+
+            .grade-select {
+                grid-column: 3;
+                grid-row: 2;
+                align-self: center;
+            }
+
+            .course-item .grade-select { grid-row: 2 / span 2; }
 
             .flag-btn {
-                position: absolute;
-                top: 14px;
-                right: 0;
-                padding: 8px 10px;
+                grid-column: 4;
+                grid-row: 2;
+                justify-self: end;
+                align-self: center;
+                padding: 6px 8px;
+                font-size: 0.9em;
+            }
+
+            .course-item .flag-btn { grid-row: 2 / span 2; }
+
+            .btn-remove {
+                grid-column: 1 / -1;
+                grid-row: 3;
+                width: 100%;
+                text-align: center;
+                border-radius: 12px;
+                padding: 10px;
+                margin-top: 2px;
             }
 
             .grade-select, .elective-select {
                 appearance: none;
                 -webkit-appearance: none;
-                width: 100%;
                 min-width: 0;
                 background-color: rgba(102, 126, 234, 0.06);
                 background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
                 background-repeat: no-repeat;
-                background-position: right 14px center;
-                background-size: 16px;
-                padding: 12px 40px 12px 14px;
+                background-position: right 10px center;
+                background-size: 14px;
+                padding: 9px 28px 9px 10px;
                 border: 1px solid rgba(102, 126, 234, 0.22);
-                border-radius: 12px;
+                border-radius: 10px;
+                font-size: 0.84em;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .grade-select {
+                width: 112px;
             }
 
             .btn-add-elective {
@@ -1765,6 +1850,31 @@
         ];
         const diplomaProjectOptionCodes = ["BSMS2001P", "BSDA2001P"];
 
+        // Compact-list avatars: deterministic initials + gradient per course code,
+        // so the same course always gets the same badge across renders.
+        const avatarPalettes = [
+            ['#667eea', '#764ba2'],
+            ['#4f8ef7', '#38bdf8'],
+            ['#a78bfa', '#7c3aed'],
+            ['#f472b6', '#c026d3'],
+            ['#60a5fa', '#6366f1'],
+            ['#34d399', '#059669']
+        ];
+        const avatarStopwords = new Set(['for', 'and', 'in', 'of', 'the', 'to', 'a', 'an', 'on']);
+
+        function getInitials(name) {
+            const words = name.replace(/[()]/g, '').split(/\s+/).filter(w => /^[A-Za-z]/.test(w) && !avatarStopwords.has(w.toLowerCase()));
+            const chosen = words.length ? words.slice(0, 2) : [name];
+            return chosen.map(w => w[0].toUpperCase()).join('') || '??';
+        }
+
+        function avatarGradient(code) {
+            let hash = 0;
+            for (let i = 0; i < code.length; i++) hash = (hash * 31 + code.charCodeAt(i)) >>> 0;
+            const [a, b] = avatarPalettes[hash % avatarPalettes.length];
+            return `linear-gradient(135deg, ${a}, ${b})`;
+        }
+
         function initializeCourses() {
             Object.keys(courses).forEach(level => {
                 const container = document.getElementById(`${level}-courses`);
@@ -1773,6 +1883,7 @@
                     const courseDiv = document.createElement('div');
                     courseDiv.className = 'course-item';
                     courseDiv.innerHTML = `
+                        <div class="course-avatar" style="background:${avatarGradient(course.code)}">${getInitials(course.name)}</div>
                         <div class="course-info">
                             <h4>${course.name}</h4>
                             <div class="course-code">${course.code}</div>
@@ -1821,6 +1932,7 @@
             row.className = 'elective-item';
             row.id = `elective-row-${id}`;
             row.innerHTML = `
+                <div class="course-avatar" id="elective-avatar-${id}" style="background:rgba(102,126,234,0.18)">?</div>
                 <select class="elective-select" id="elective-course-${id}" onchange="updateElectiveCredits(${id}); calculateCGPA()">
                     ${buildElectiveOptionsHTML('')}
                 </select>
@@ -1848,8 +1960,13 @@
         function updateElectiveCredits(id) {
             const select = document.getElementById(`elective-course-${id}`);
             const credEl = document.getElementById(`elective-credits-${id}`);
+            const avatarEl = document.getElementById(`elective-avatar-${id}`);
             const course = electiveByCode[select.value];
             credEl.textContent = course ? `${course.credits} Credits` : '- Credits';
+            if (avatarEl) {
+                avatarEl.textContent = course ? getInitials(course.name) : '?';
+                avatarEl.style.background = course ? avatarGradient(select.value) : 'rgba(102,126,234,0.18)';
+            }
         }
 
         function toggleReviewFlag(btn) {
