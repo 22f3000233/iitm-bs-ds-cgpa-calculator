@@ -1043,6 +1043,11 @@
                 font-weight: 400;
             }
 
+            /* Keeps the sticky header from covering a section scrolled to via the tab bar */
+            .level-content {
+                scroll-margin-top: calc(70px + env(safe-area-inset-top));
+            }
+
             /* Hero CGPA ring */
             .overall-cgpa-card {
                 display: flex;
@@ -2006,7 +2011,12 @@
             document.querySelectorAll('.level-content').forEach(content => content.classList.remove('active'));
 
             btn.classList.add('active');
-            document.getElementById(levelId).classList.add('active');
+            const content = document.getElementById(levelId);
+            content.classList.add('active');
+
+            if (window.innerWidth <= 768) {
+                content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
 
             try {
                 localStorage.setItem(TAB_STORAGE_KEY, levelId);
