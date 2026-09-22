@@ -124,12 +124,21 @@
         }
 
         .overall-cgpa-card {
+            position: relative;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 20px;
             padding: 35px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             text-align: center;
             color: white;
+        }
+
+        .cgpa-ring {
+            display: none;
+        }
+
+        .header-icon {
+            display: none;
         }
 
         .overall-label {
@@ -280,6 +289,10 @@
         .tab:hover {
             background: #e9ecef;
             transform: translateY(-2px);
+        }
+
+        .tab-icon {
+            display: none;
         }
 
         .tab.active {
@@ -965,11 +978,431 @@
                 left: 16px !important;
             }
         }
+
+        /* ============================================================
+           Native mobile app experience
+           Sticky glass header + fixed glass tab bar + frosted list UI,
+           layered over the existing brand gradient instead of a
+           shrunk-down copy of the desktop card layout.
+           ============================================================ */
+        @media (max-width: 768px) {
+            body {
+                padding: 0 0 max(88px, calc(70px + env(safe-area-inset-bottom)));
+            }
+
+            .container {
+                padding: 0 16px;
+            }
+
+            .main-grid {
+                gap: 16px;
+                margin-bottom: 20px;
+            }
+
+            /* Sticky app header */
+            .header {
+                position: sticky;
+                top: 0;
+                z-index: 70;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                text-align: left;
+                color: #fff;
+                margin: 0 -16px 18px;
+                padding: max(14px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) 14px max(16px, env(safe-area-inset-left));
+                background: rgba(17, 22, 55, 0.72);
+                backdrop-filter: blur(24px) saturate(180%);
+                -webkit-backdrop-filter: blur(24px) saturate(180%);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .header-icon {
+                display: block;
+                width: 34px;
+                height: 34px;
+                border-radius: 10px;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+                flex-shrink: 0;
+            }
+
+            .header h1 {
+                font-size: 1.05em;
+                line-height: 1.25;
+                margin-bottom: 2px;
+                letter-spacing: -0.2px;
+            }
+
+            .header p {
+                font-size: 0.72em;
+                opacity: 0.7;
+                font-weight: 400;
+            }
+
+            /* Hero CGPA ring */
+            .overall-cgpa-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 240px;
+                padding: 20px;
+            }
+
+            .cgpa-ring {
+                display: block;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: min(58vw, 200px);
+                height: min(58vw, 200px);
+                transform: translate(-50%, -50%);
+                border-radius: 50%;
+                background: conic-gradient(rgba(255, 255, 255, 0.95) calc(var(--progress, 0) * 3.6deg), rgba(255, 255, 255, 0.18) 0deg);
+                -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 10px));
+                mask: radial-gradient(farthest-side, transparent calc(100% - 10px), #000 calc(100% - 10px));
+                transition: background 0.6s ease;
+            }
+
+            .overall-value {
+                font-size: 2.6em;
+                margin: 4px 0 2px;
+            }
+
+            .overall-percentage {
+                font-size: 1em;
+                opacity: 0.85;
+            }
+
+            /* Sidebar becomes a 2-col grid: hero + chips full width, actions side by side */
+            .cgpa-sidebar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .cgpa-sidebar > .overall-cgpa-card,
+            .cgpa-sidebar > .level-cgpa-cards {
+                grid-column: 1 / -1;
+            }
+
+            .level-cgpa-cards {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .level-cgpa-card {
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                gap: 6px;
+                background: rgba(255, 255, 255, 0.14);
+                backdrop-filter: blur(18px) saturate(180%);
+                -webkit-backdrop-filter: blur(18px) saturate(180%);
+                border: 1px solid rgba(255, 255, 255, 0.22);
+                border-radius: 16px;
+                padding: 14px 16px;
+                box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+            }
+
+            .level-cgpa-card:hover {
+                transform: none;
+                box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+            }
+
+            .level-cgpa-card:active {
+                transform: scale(0.96);
+            }
+
+            .level-cgpa-card:focus-visible {
+                outline-color: #fff;
+            }
+
+            .level-cgpa-info h3 {
+                color: rgba(255, 255, 255, 0.92);
+                font-size: 0.82em;
+            }
+
+            .level-cgpa-credits {
+                color: rgba(255, 255, 255, 0.62);
+                font-size: 0.72em;
+            }
+
+            .level-cgpa-value {
+                font-size: 1.7em;
+                background: linear-gradient(135deg, #fff, #e0e7ff);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .btn-tour, .btn-reset {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                padding: 14px 8px;
+                border-radius: 16px;
+                font-size: 0.76em;
+                text-transform: none;
+                letter-spacing: 0;
+                color: #fff;
+                box-shadow: 0 8px 24px rgba(15, 23, 42, 0.16);
+            }
+
+            .btn-icon {
+                font-size: 1.25em;
+                line-height: 1;
+            }
+
+            .btn-tour {
+                background: rgba(129, 140, 248, 0.22);
+                border: 1px solid rgba(165, 180, 252, 0.4);
+            }
+
+            .btn-reset {
+                background: rgba(248, 113, 113, 0.18);
+                border: 1px solid rgba(252, 165, 165, 0.4);
+            }
+
+            .btn-tour:hover, .btn-reset:hover {
+                transform: none;
+            }
+
+            .btn-tour:active, .btn-reset:active {
+                transform: scale(0.96);
+            }
+
+            /* Content area becomes transparent - the list panel below is the surface */
+            .content-area {
+                background: transparent;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+            }
+
+            .section-title {
+                color: #fff;
+                border-left-color: rgba(255, 255, 255, 0.65);
+                font-size: 1.05em;
+                margin: 4px 0 16px;
+            }
+
+            .subsection-title {
+                color: #fff;
+                margin: 26px 0 6px;
+            }
+
+            .subsection-note {
+                color: rgba(255, 255, 255, 0.8);
+            }
+
+            /* Course list becomes one frosted, grouped list (native settings-list style) */
+            .course-grid {
+                display: block;
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                border-radius: 18px;
+                padding: 4px 14px;
+                box-shadow: 0 10px 32px rgba(15, 23, 42, 0.16);
+            }
+
+            .course-item, .elective-item {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                background: transparent;
+                border: none;
+                border-bottom: 1px solid rgba(102, 126, 234, 0.14);
+                border-radius: 0;
+                padding: 16px 40px 16px 2px;
+                box-shadow: none;
+                transform: none !important;
+            }
+
+            .course-item:last-child, .elective-item:last-child {
+                border-bottom: none;
+            }
+
+            .course-item:hover, .elective-item:hover {
+                border-bottom-color: rgba(102, 126, 234, 0.14);
+                box-shadow: none;
+            }
+
+            .course-item.flagged, .elective-item.flagged {
+                border-bottom-color: transparent;
+                border-radius: 12px;
+                background: rgba(245, 158, 11, 0.1);
+                box-shadow: none;
+                margin: 4px 0;
+                padding-left: 12px;
+            }
+
+            .course-info { order: 1; }
+            .elective-select { order: 1; width: 100%; }
+            .course-credits { order: 2; align-self: flex-start; }
+            .grade-select { order: 3; }
+            .btn-remove { order: 4; width: 100%; text-align: center; border-radius: 12px; padding: 12px; margin-top: 2px; }
+
+            .flag-btn {
+                position: absolute;
+                top: 14px;
+                right: 0;
+                padding: 8px 10px;
+            }
+
+            .grade-select, .elective-select {
+                appearance: none;
+                -webkit-appearance: none;
+                width: 100%;
+                min-width: 0;
+                background-color: rgba(102, 126, 234, 0.06);
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23667eea' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 14px center;
+                background-size: 16px;
+                padding: 12px 40px 12px 14px;
+                border: 1px solid rgba(102, 126, 234, 0.22);
+                border-radius: 12px;
+            }
+
+            .btn-add-elective {
+                width: 100%;
+                margin-top: 10px;
+                padding: 14px;
+                border-radius: 14px;
+            }
+
+            /* Fixed native tab bar */
+            .level-tabs {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 60;
+                display: flex;
+                grid-template-columns: none;
+                gap: 2px;
+                margin: 0;
+                padding: 8px 6px calc(8px + env(safe-area-inset-bottom));
+                background: rgba(17, 22, 55, 0.72);
+                backdrop-filter: blur(24px) saturate(180%);
+                -webkit-backdrop-filter: blur(24px) saturate(180%);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+            }
+
+            .tab {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                background: transparent;
+                border: 2px solid transparent;
+                border-radius: 14px;
+                padding: 8px 2px;
+                color: rgba(255, 255, 255, 0.55);
+                font-size: 0.64em;
+                font-weight: 600;
+            }
+
+            .tab:hover {
+                background: transparent;
+                transform: none;
+            }
+
+            .tab:active {
+                transform: scale(0.92);
+            }
+
+            .tab:focus-visible {
+                outline: 2px solid #a5b4fc;
+                outline-offset: -2px;
+            }
+
+            .tab-icon {
+                display: block;
+                width: 21px;
+                height: 21px;
+            }
+
+            .tab.active {
+                background: rgba(129, 140, 248, 0.18);
+                color: #fff;
+                box-shadow: none;
+            }
+
+            .tab.active .tab-icon {
+                color: #a5b4fc;
+                filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.85));
+            }
+
+            /* Frosted glass panels for the checkpoint / formula / grading sections */
+            .checkpoint-card, .grading-card, .formula-box {
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(20px) saturate(180%);
+                -webkit-backdrop-filter: blur(20px) saturate(180%);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                box-shadow: 0 12px 36px rgba(15, 23, 42, 0.18);
+                padding: 22px 18px;
+                border-radius: 18px;
+            }
+
+            .checkpoint-header h2 {
+                font-size: 1.05em;
+            }
+
+            .checkpoint-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .checkpoint-stat {
+                background: rgba(102, 126, 234, 0.06);
+                padding: 14px 16px;
+                border-radius: 14px;
+            }
+
+            .checkpoint-value {
+                font-size: 1.6em;
+            }
+
+            .checkpoint-label {
+                font-size: 0.78em;
+            }
+
+            .checkpoint-requirement {
+                font-size: 0.74em;
+            }
+
+            .checkpoint-status {
+                font-size: 0.82em;
+            }
+
+            .disclaimer-box {
+                padding: 16px 18px;
+                font-size: 0.8em;
+            }
+        }
+
+        @media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+            .cgpa-ring, .tab, .level-cgpa-card, .btn-tour, .btn-reset, .course-item, .elective-item {
+                transition: none !important;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <img src="apple-touch-icon.png" alt="" class="header-icon" aria-hidden="true">
             <h1>IIT Madras BSc CGPA Calculator</h1>
             <p>Data Science and Applications</p>
         </div>
@@ -977,6 +1410,7 @@
         <div class="main-grid">
             <div class="cgpa-sidebar">
                 <div class="overall-cgpa-card">
+                    <div class="cgpa-ring" id="overallRing" aria-hidden="true"></div>
                     <div class="overall-label">Overall CGPA</div>
                     <div class="overall-value" id="overallCGPA">0.00</div>
                     <div class="overall-percentage" id="overallPercentage">0.0%</div>
@@ -1017,20 +1451,32 @@
                 </div>
 
                 <div class="actions">
-                    <button type="button" id="tourFab" class="btn btn-tour" onclick="startTour()" aria-label="Take a tour of the calculator">🧭 Take a Tour</button>
+                    <button type="button" id="tourFab" class="btn btn-tour" onclick="startTour()" aria-label="Take a tour of the calculator"><span class="btn-icon">🧭</span> <span class="btn-text">Take a Tour</span></button>
                 </div>
 
                 <div class="actions">
-                    <button type="button" class="btn btn-reset" onclick="resetAll()">Reset All Grades</button>
+                    <button type="button" class="btn btn-reset" onclick="resetAll()"><span class="btn-icon">🔄</span> <span class="btn-text">Reset All Grades</span></button>
                 </div>
             </div>
 
             <div class="content-area">
                 <div class="level-tabs">
-                    <button class="tab active" onclick="switchTab('foundation', this)">Foundation</button>
-                    <button class="tab" onclick="switchTab('diploma-prog', this)">Diploma - Prog</button>
-                    <button class="tab" onclick="switchTab('diploma-ds', this)">Diploma - DS</button>
-                    <button class="tab" onclick="switchTab('degree', this)">Degree</button>
+                    <button class="tab active" onclick="switchTab('foundation', this)">
+                        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="M2 12l10 5 10-5"/><path d="M2 16l10 5 10-5"/></svg>
+                        <span class="tab-label">Foundation</span>
+                    </button>
+                    <button class="tab" onclick="switchTab('diploma-prog', this)">
+                        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 6 2 12 8 18"/><polyline points="16 6 22 12 16 18"/></svg>
+                        <span class="tab-label">Diploma - Prog</span>
+                    </button>
+                    <button class="tab" onclick="switchTab('diploma-ds', this)">
+                        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="11"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="14"/></svg>
+                        <span class="tab-label">Diploma - DS</span>
+                    </button>
+                    <button class="tab" onclick="switchTab('degree', this)">
+                        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12.5V18c0 1.7 2.7 3 6 3s6-1.3 6-3v-5.5"/></svg>
+                        <span class="tab-label">Degree</span>
+                    </button>
                 </div>
 
                 <div id="foundation" class="level-content active">
@@ -1767,6 +2213,9 @@
             document.getElementById('overallCGPA').textContent = overallCGPA;
             document.getElementById('overallPercentage').textContent = percentage + '%';
 
+            const overallRing = document.getElementById('overallRing');
+            if (overallRing) overallRing.style.setProperty('--progress', percentage);
+
             updateCheckpoint();
             updatePGCheckpoint(overallCompletedCredits, overallCompletedCredits > 0 ? overallGradePoints / overallCompletedCredits : 0);
 
@@ -1899,6 +2348,8 @@
                 // Reset all displays
                 document.getElementById('overallCGPA').textContent = '0.00';
                 document.getElementById('overallPercentage').textContent = '0.0%';
+                const overallRing = document.getElementById('overallRing');
+                if (overallRing) overallRing.style.setProperty('--progress', 0);
                 document.getElementById('foundationCGPA').textContent = '0.00';
                 document.getElementById('foundationCredits').textContent = '0/32 Credits';
                 document.getElementById('diplomaProgCGPA').textContent = '0.00';
